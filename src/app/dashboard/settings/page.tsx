@@ -1,15 +1,12 @@
-
 import { auth } from "@/auth";
 import dbConnect from "@/lib/db";
 import User from "@/models/User";
-import { updateProfile } from "@/app/actions/user";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 import { redirect } from "next/navigation";
 import { Shield, User as UserIcon, Lock } from "lucide-react";
+import { SettingsForm } from "@/components/dashboard/SettingsForm";
 
 export default async function SettingsPage() {
     const session = await auth();
@@ -66,46 +63,7 @@ export default async function SettingsPage() {
                 <CardContent>
                     {isAdmin ? (
                         /* ── Admin: editable form ── */
-                        <form action={async (formData) => { await updateProfile(formData); }} className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="email">Email</Label>
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    defaultValue={user.email}
-                                    disabled
-                                    className="bg-muted"
-                                />
-                                <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="name">Name</Label>
-                                <Input
-                                    id="name"
-                                    name="name"
-                                    type="text"
-                                    defaultValue={user.name || ''}
-                                    placeholder="Your Name"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="password">New Password</Label>
-                                <Input
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    placeholder="Leave blank to keep current password"
-                                />
-                            </div>
-
-                            <Button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white">
-                                <Shield className="mr-2 h-4 w-4" />
-                                Save Changes
-                            </Button>
-                        </form>
+                        <SettingsForm defaultName={user.name || ''} defaultEmail={user.email} />
                     ) : (
                         /* ── Regular user: read-only view ── */
                         <div className="space-y-4">

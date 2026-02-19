@@ -1,11 +1,9 @@
 import { PackageCard } from "@/components/packages/PackageCard";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import dbConnect from "@/lib/db";
 import Package from "@/models/Package";
+import Link from "next/link";
 
-// Force dynamic rendering if using searchParams that change
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
@@ -19,24 +17,16 @@ interface PageProps {
 
 async function getPackages(params: any) {
   await dbConnect();
-  
   const query: any = {};
-  
   if (params.destination) {
     query.destination = { $regex: params.destination, $options: 'i' };
   }
-  
-  // Example filter logic - expand as needed
   if (params.minPrice || params.maxPrice) {
     query.price = {};
     if (params.minPrice) query.price.$gte = Number(params.minPrice);
     if (params.maxPrice) query.price.$lte = Number(params.maxPrice);
   }
-
-  // Use lean() for performance
   const packages = await Package.find(query).lean();
-  
-  // Serialize Mongoose docs to plain objects (handle _id, Date)
   return packages.map((pkg: any) => ({
     ...pkg,
     _id: pkg._id.toString(),
@@ -50,47 +40,87 @@ export default async function PackagesPage({ searchParams }: PageProps) {
   const packages = await getPackages(params);
 
   return (
-    <div className="container py-12">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div>
-           <h1 className="text-3xl font-bold tracking-tight">Explore Packages</h1>
-           <p className="text-muted-foreground mt-1">Find your perfect getaway from our curated selection.</p>
+    <div className="flex flex-col min-h-screen">
+      {/* ══ HERO BANNER ══ */}
+      <section className="relative h-64 md:h-80 flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1527631746610-bca00a040d60?q=80&w=2070&auto=format&fit=crop')",
+          }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
         </div>
-        
-        {/* Simple Search - could be a separate component */}
-        <div className="flex gap-2 w-full md:w-auto">
-          <div className="relative w-full md:w-[300px]">
-             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-             <Input placeholder="Search destinations..." className="pl-9" />
-          </div>
-          <Button>Search</Button>
+        <div className="relative z-10 text-center text-white px-4">
+          <h1 className="text-5xl md:text-7xl font-black mb-3">Packages</h1>
+          <p className="text-white/60 text-sm flex items-center justify-center gap-2">
+            <Link href="/" className="hover:text-white transition-colors">Home</Link>
+            <span>›</span>
+            <span>Packages</span>
+          </p>
         </div>
-      </div>
+      </section>
 
-      {packages.length === 0 ? (
-        <div className="text-center py-20">
-          <h2 className="text-xl font-semibold">No packages found</h2>
-          <p className="text-muted-foreground">Try adjusting your filters or search criteria.</p>
+      {/* ══ PACKAGES GRID (dark background matching Figma) ══ */}
+      <section className="bg-gray-950 py-16 flex-1">
+        <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+            <div>
+              <p className="text-gray-400 max-w-xs leading-relaxed text-sm">
+                Explore some of the world's most famous tourist destinations, each unique and full of adventure.
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search destinations..."
+                  className="pl-9 pr-4 py-2 bg-gray-800 border border-gray-700 text-white placeholder:text-gray-500 rounded-full text-sm focus:outline-none focus:ring-1 focus:ring-gray-500 w-56"
+                />
+              </div>
+              <Link
+                href="/packages"
+                className="text-white font-bold text-sm hover:text-gray-300 transition-colors flex items-center gap-1 group"
+              >
+                All Packages
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </div>
+
+          {packages.length === 0 ? (
+            <div className="text-center py-24">
+              <p className="text-5xl mb-4">🌍</p>
+              <h2 className="text-2xl font-bold text-white mb-2">No packages found</h2>
+              <p className="text-gray-400">Check back later or contact us to plan a custom trip.</p>
+              <Link href="/contact" className="mt-6 inline-block px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-100 transition-all">
+                Contact Us
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {packages.map((pkg: any) => (
+                <PackageCard
+                  key={pkg._id}
+                  id={pkg._id}
+                  title={pkg.title}
+                  slug={pkg.slug}
+                  image={pkg.image}
+                  price={pkg.price}
+                  duration={pkg.duration}
+                  destination={pkg.destination}
+                  rating={pkg.rating}
+                  reviewsCount={pkg.reviewsCount}
+                  maxPeople={pkg.maxPeople}
+                />
+              ))}
+            </div>
+          )}
         </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {packages.map((pkg: any) => (
-            <PackageCard
-              key={pkg._id}
-              id={pkg._id}
-              title={pkg.title}
-              slug={pkg.slug}
-              image={pkg.image}
-              price={pkg.price}
-              duration={pkg.duration}
-              destination={pkg.destination}
-              rating={pkg.rating}
-              reviewsCount={pkg.reviewsCount}
-              maxPeople={pkg.maxPeople}
-            />
-          ))}
-        </div>
-      )}
+      </section>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import { auth } from "@/auth";
 import dbConnect from "@/lib/db";
 import Booking from "@/models/Booking";
+import Package from "@/models/Package"; // required for .populate("package") to work
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";

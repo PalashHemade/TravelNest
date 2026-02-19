@@ -1,6 +1,4 @@
 import NextAuth, { type User as AuthUser } from "next-auth";
-import type { Account, Profile } from "@auth/core/types";
-import type { JWT } from "next-auth/jwt";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { z } from "zod";
@@ -56,16 +54,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     ],
     callbacks: {
         ...authConfig.callbacks,
-        async jwt({ token, user, account }: { token: JWT; user: AuthUser; account: Account | null }) {
+        async jwt({ token, user, account }) {
             // Only fetch from DB on initial sign-in (when `user` object is present)
             if (user) {
                 if ((user as any).roleMismatch) {
-                    // Propagate the mismatch flag so signIn callback can reject it
                     token.roleMismatch = true;
                     return token;
                 }
                 await dbConnect();
-                const dbUser = await User.findOne({ email: user.email });
+                const dbUser = await User.findOne({ email: (user as any).email });
                 if (dbUser) {
                     token.id = dbUser._id.toString();
                     token.role = dbUser.role;
@@ -75,18 +72,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             }
             return token;
         },
-        async signIn({ user, account, profile }: { user: AuthUser; account?: Account | null; profile?: Profile }) {
+        async signIn({ user, account, profile }) {
             // Reject role-mismatch sentinel
             if ((user as any).roleMismatch) {
                 return '/login?error=RoleMismatch';
             }
             if (account?.provider === 'google') {
                 await dbConnect();
-                const existingUser = await User.findOne({ email: user.email });
+                const existingUser = await User.findOne({ email: (user as any).email });
                 if (!existingUser) {
                     await User.create({
                         name: user.name || '',
-                        email: user.email || '',
+                        email: (user as any).email || '',
                         image: user.image || '',
                         provider: 'google',
                         role: 'user',

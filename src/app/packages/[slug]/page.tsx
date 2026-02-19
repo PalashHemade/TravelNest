@@ -1,25 +1,22 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   MapPin,
   Clock,
-  Users,
   Star,
   CheckCircle2,
-  Calendar,
   Share2,
   Heart
 } from "lucide-react";
 import dbConnect from "@/lib/db";
 import Package from "@/models/Package";
-import Link from "next/link";
+import { BookNowButton } from "@/components/packages/BookNowButton";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 async function getPackage(slug: string) {
@@ -36,7 +33,8 @@ async function getPackage(slug: string) {
 }
 
 export default async function PackageDetailsPage({ params }: PageProps) {
-  const pkg: any = await getPackage(params.slug);
+  const { slug } = await params;
+  const pkg: any = await getPackage(slug);
 
   if (!pkg) {
     notFound();
@@ -136,9 +134,7 @@ export default async function PackageDetailsPage({ params }: PageProps) {
                    </div>
                  </div>
                  
-                 <Button size="lg" className="w-full text-lg font-semibold h-12">
-                   Book Now
-                 </Button>
+                  <BookNowButton packageId={pkg._id} slug={slug} />
                  
                  <p className="text-xs text-center text-muted-foreground">
                    Free cancellation up to 48 hours before the trip.

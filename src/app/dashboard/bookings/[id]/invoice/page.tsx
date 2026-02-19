@@ -2,11 +2,7 @@ import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
 import dbConnect from "@/lib/db";
 import Booking from "@/models/Booking";
-import Package from "@/models/Package";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import User from "@/models/User";
-import { Button } from "@/components/ui/button";
-import { Printer } from "lucide-react";
+import { PrintButton } from "@/components/dashboard/PrintButton";
 
 export default async function InvoicePage({ params }: { params: { id: string } }) {
   const session = await auth();
@@ -14,20 +10,17 @@ export default async function InvoicePage({ params }: { params: { id: string } }
 
   await dbConnect();
 
-  // Ensure models are registered
-  const _pkg = Package;
-  const _usr = User;
-
-  const booking = await Booking.findById(params.id)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const booking: any = await Booking.findById(params.id)
     .populate('package')
     .populate('user')
     .lean();
 
   if (!booking) notFound();
 
-  // Access control
-  if (session.user.role !== 'admin' && booking.user._id.toString() !== session.user.id) {
-     return <div>Unauthorized access to this invoice.</div>;
+  // Access control: only admin or the booking owner can view
+  if (session.user.role !== 'admin' && booking.user?._id?.toString() !== session.user.id) {
+    return <div className="p-8 text-center text-red-500">Unauthorized access to this invoice.</div>;
   }
 
   const invoiceDate = new Date().toLocaleDateString();
@@ -37,14 +30,7 @@ export default async function InvoicePage({ params }: { params: { id: string } }
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container max-w-3xl mx-auto">
         <div className="mb-6 flex justify-end print:hidden">
-          <Button onclick="window.print()" className="flex items-center gap-2">
-            <Printer className="h-4 w-4" /> Print Invoice
-          </Button>
-          {/* Note: In React, we'd use a client component for the button or script, 
-              but for simplicity let's assume the user uses browser print or we add a script */}
-             <script dangerouslySetInnerHTML={{__html: `
-                document.querySelector('button').addEventListener('click', () => window.print());
-             `}} />
+          <PrintButton />
         </div>
 
         <div className="bg-white p-8 md:p-12 rounded-lg shadow-sm border print:shadow-none print:border-none" id="invoice">

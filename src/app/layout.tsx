@@ -1,25 +1,29 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
-export const metadata: Metadata = {
-  title: {
-    default: "TravelNest - Premium Travel Experiences",
-    template: "%s | TravelNest",
-  },
-  description: "Discover and book the world's best travel experiences with TravelNest.",
-  icons: {
-    icon: "/favicon.ico",
-  },
-};
-
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/components/auth-provider";
 import { Shell } from "@/components/layout/Shell";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "TravelNest - Explore New Worlds",
+    template: "%s | TravelNest",
+  },
+  description: "Explore the world with what you love. Beautiful natural beauty, exotic destinations, curated travel experiences.",
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 
 export default function RootLayout({
   children,
@@ -31,14 +35,14 @@ export default function RootLayout({
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          inter.variable
+          poppins.variable
         )}
       >
         <AuthProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="system"
-            enableSystem
+            defaultTheme="light"
+            enableSystem={false}
             disableTransitionOnChange
           >
             <Shell>{children}</Shell>

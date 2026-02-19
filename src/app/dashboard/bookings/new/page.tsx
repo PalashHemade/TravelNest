@@ -6,9 +6,15 @@ import { NewBookingForm } from "@/components/dashboard/NewBookingForm";
 
 export const dynamic = 'force-dynamic';
 
-export default async function NewBookingPage() {
+interface PageProps {
+    searchParams: Promise<{ packageId?: string }>;
+}
+
+export default async function NewBookingPage({ searchParams }: PageProps) {
     const session = await auth();
     if (!session?.user?.email) redirect("/login");
+
+    const { packageId } = await searchParams;
 
     await dbConnect();
     const packages = await Package.find({}).select('title price duration destination maxPeople').sort({ title: 1 }).lean();
@@ -25,7 +31,8 @@ export default async function NewBookingPage() {
     return (
         <div className="max-w-2xl space-y-6">
             <h1 className="text-3xl font-bold tracking-tight">New Booking</h1>
-            <NewBookingForm packages={serialized} userEmail={session.user.email!} />
+            <NewBookingForm packages={serialized} userEmail={session.user.email!} initialPackageId={packageId} />
         </div>
     );
 }
+

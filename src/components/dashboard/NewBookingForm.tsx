@@ -19,12 +19,13 @@ interface PackageOption {
     maxPeople: number;
 }
 
-export function NewBookingForm({ packages, userEmail }: { packages: PackageOption[]; userEmail: string }) {
+export function NewBookingForm({ packages, userEmail, initialPackageId }: { packages: PackageOption[]; userEmail: string; initialPackageId?: string }) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedPkg, setSelectedPkg] = useState<PackageOption | null>(null);
+    const initPkg = initialPackageId ? packages.find(p => p._id === initialPackageId) || null : null;
+    const [selectedPkg, setSelectedPkg] = useState<PackageOption | null>(initPkg);
     const [form, setForm] = useState({
-        packageId: "", startDate: "", travelers: "1",
+        packageId: initialPackageId || "", startDate: "", travelers: "1",
         contactEmail: userEmail, contactPhone: "", specialRequests: "",
     });
 
