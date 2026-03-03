@@ -44,7 +44,7 @@ export function PackageCard({
   maxPeople,
 }: PackageCardProps) {
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col">
+    <div className="group bg-white dark:bg-card rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col dark:border dark:border-gray-800">
       {/* Image */}
       <div className="relative h-52 overflow-hidden">
         <img
@@ -58,16 +58,16 @@ export function PackageCard({
       <div className="p-5 flex flex-col flex-1">
         {/* Title + Price */}
         <div className="flex items-start justify-between mb-3 gap-2">
-          <h3 className="font-bold text-lg text-gray-900 leading-tight line-clamp-1">
+          <h3 className="font-bold text-lg text-gray-900 dark:text-white leading-tight line-clamp-1">
             {destination}
           </h3>
-          <span className="text-sm font-bold text-gray-900 whitespace-nowrap shrink-0">
+          <span className="text-sm font-bold text-gray-900 dark:text-gray-300 whitespace-nowrap shrink-0">
             ${price.toLocaleString()}/{duration}days
           </span>
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-500 line-clamp-2 mb-4 flex-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2 mb-4 flex-1">
           {title} — an amazing journey to {destination}. Explore beautiful scenery, local culture, and unforgettable experiences.
         </p>
 

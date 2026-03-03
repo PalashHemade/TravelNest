@@ -48,7 +48,7 @@ export function Navbar() {
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         isTransparent
           ? "bg-transparent"
-          : "bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100"
+          : "bg-white/95 dark:bg-gray-950/95 backdrop-blur-md shadow-sm border-b border-gray-100 dark:border-gray-800"
       )}
     >
       <div className="container mx-auto px-4 md:px-6">
@@ -64,7 +64,7 @@ export function Navbar() {
             <span
               className={cn(
                 "text-xl font-black tracking-tight hidden sm:block",
-                isTransparent ? "text-white" : "text-gray-900"
+                isTransparent ? "text-white" : "text-gray-900 dark:text-white"
               )}
             >
               TravelNest
@@ -84,8 +84,8 @@ export function Navbar() {
                       ? "text-white font-semibold"
                       : "text-white/80 hover:text-white hover:bg-white/10"
                     : pathname === link.href
-                    ? "text-gray-900 font-semibold bg-gray-100"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    ? "text-gray-900 dark:text-white font-semibold bg-gray-100 dark:bg-gray-800"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800"
                 )}
               >
                 {link.label}
@@ -103,7 +103,7 @@ export function Navbar() {
                 "p-2 rounded-full transition-all",
                 isTransparent
                   ? "text-white/80 hover:text-white hover:bg-white/10"
-                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
               )}
               aria-label="Search"
             >
@@ -139,7 +139,7 @@ export function Navbar() {
                     "px-4 py-2 rounded-full text-sm font-medium transition-all",
                     isTransparent
                       ? "text-white/80 hover:text-white hover:bg-white/10"
-                      : "text-gray-600 hover:text-gray-900"
+                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
                   )}
                 >
                   Log in
@@ -158,7 +158,7 @@ export function Navbar() {
           <button
             className={cn(
               "md:hidden p-2 rounded-lg",
-              isTransparent ? "text-white" : "text-gray-700"
+              isTransparent ? "text-white" : "text-gray-700 dark:text-gray-300"
             )}
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
@@ -180,8 +180,8 @@ export function Navbar() {
                 className={cn(
                   "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium",
                   pathname === link.href
-                    ? "bg-gray-900 text-white"
-                    : "text-gray-700 hover:bg-gray-50"
+                    ? "bg-gray-900 dark:bg-gray-800 text-white"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
                 )}
               >
                 {link.label}

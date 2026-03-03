@@ -9,35 +9,35 @@ const DESTINATIONS = [
     id: 1,
     name: "Bali, Indonesia",
     description: "Bali is a beautiful tourist spot and is visited by many travelers.",
-    image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=800&auto=format&fit=crop",
+    image: "https://palash-bucket-aws.s3.ap-south-1.amazonaws.com/Bali.jpg",
     country: "Indonesia",
   },
   {
     id: 2,
     name: "Swiss Alps",
     description: "Experience the breathtaking beauty of the Swiss Alps and pristine mountain villages.",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=800&auto=format&fit=crop",
+    image: "https://palash-bucket-aws.s3.ap-south-1.amazonaws.com/Swis.jpg",
     country: "Switzerland",
   },
   {
     id: 3,
     name: "New York City",
     description: "The city that never sleeps. Iconic skyline, world-class culture, and endless energy.",
-    image: "https://images.unsplash.com/photo-1534430480872-3498386e7856?q=80&w=800&auto=format&fit=crop",
+    image: "https://palash-bucket-aws.s3.ap-south-1.amazonaws.com/newyork.jpg",
     country: "USA",
   },
   {
     id: 4,
     name: "Paris, France",
     description: "The city of love and lights. Visit the Eiffel Tower, the Louvre, and romantic cafés.",
-    image: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?q=80&w=800&auto=format&fit=crop",
+    image: "https://palash-bucket-aws.s3.ap-south-1.amazonaws.com/Paris.jpg",
     country: "France",
   },
   {
     id: 5,
     name: "Thailand",
     description: "Stunning temples, tropical beaches, and vibrant street food culture await.",
-    image: "https://images.unsplash.com/photo-1563492065599-3520f775eeed?q=80&w=800&auto=format&fit=crop",
+    image: "https://palash-bucket-aws.s3.ap-south-1.amazonaws.com/Thailand.jpg",
     country: "Thailand",
   },
 ];
@@ -132,7 +132,7 @@ export default function Home() {
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=2035&auto=format&fit=crop')",
+              "url('https://palash-bucket-aws.s3.ap-south-1.amazonaws.com/Travel.jpg')",
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
@@ -151,7 +151,7 @@ export default function Home() {
             </p>
 
             {/* Search Bar — pill style matching Figma */}
-            <div className="bg-white rounded-full shadow-2xl flex flex-wrap md:flex-nowrap items-center gap-0 overflow-hidden w-full max-w-xl animate-fade-up-delay-2">
+            <div className="bg-white dark:bg-card rounded-full shadow-2xl flex flex-wrap md:flex-nowrap items-center gap-0 overflow-hidden w-full max-w-xl animate-fade-up-delay-2">
               <SearchPill label="Location" icon="📍" />
               <div className="w-px h-8 bg-gray-200 hidden md:block" />
               <SearchPill label="Date" icon="📅" />
@@ -176,14 +176,14 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/* EXPLORE DESTINATIONS CAROUSEL              */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 px-4 bg-white">
+      <section className="py-20 px-4 bg-white dark:bg-background">
         <div className="container mx-auto">
           {/* Heading */}
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 leading-tight">
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-gray-100 mb-4 leading-tight">
               Explore new worlds with<br />exotic natural scenery
             </h2>
-            <p className="text-gray-500 text-base">
+            <p className="text-gray-500 dark:text-gray-400 text-base">
               Explore the world with what you love beautiful natural beauty.
             </p>
           </div>
@@ -217,12 +217,12 @@ export default function Home() {
                     }`}
                   />
                   {i === 1 && (
-                    <div className="absolute bottom-0 left-0 right-0 bg-white rounded-b-2xl p-5">
-                      <div className="absolute -top-5 right-4 h-10 w-10 rounded-full bg-white shadow-md flex items-center justify-center text-gray-900 font-bold text-lg">
+                    <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-card rounded-b-2xl p-5">
+                      <div className="absolute -top-5 right-4 h-10 w-10 rounded-full bg-white dark:bg-card shadow-md flex items-center justify-center text-gray-900 dark:text-white font-bold text-lg">
                         "
                       </div>
-                      <h3 className="text-xl font-black text-gray-900 mb-1">{dest.name}.</h3>
-                      <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
+                      <h3 className="text-xl font-black text-gray-900 dark:text-white mb-1">{dest.name}.</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
                         {dest.description}
                       </p>
                     </div>
@@ -275,11 +275,11 @@ export default function Home() {
           </div>
 
           {/* Packages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {FEATURED_PACKAGES.map((pkg) => (
               <div
                 key={pkg.name}
-                className="bg-white rounded-2xl overflow-hidden group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+                className="bg-white dark:bg-card rounded-2xl overflow-hidden group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 dark:border dark:border-gray-800 flex flex-col"
               >
                 {/* Image */}
                 <div className="h-52 overflow-hidden">
@@ -293,12 +293,12 @@ export default function Home() {
                 {/* Info */}
                 <div className="p-5">
                   <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-xl font-black text-gray-900">{pkg.name}</h3>
-                    <span className="text-sm font-bold text-gray-700">
+                    <h3 className="text-xl font-black text-gray-900 dark:text-white">{pkg.name}</h3>
+                    <span className="text-sm font-bold text-gray-700 dark:text-gray-300">
                       {pkg.price}/{pkg.duration}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-500 mb-5 line-clamp-2 leading-relaxed">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-5 line-clamp-2 leading-relaxed">
                     {pkg.description}
                   </p>
                   <div className="flex items-center justify-between">
@@ -320,7 +320,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/* WHY CHOOSE US                              */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             {/* Left: Image collage */}
@@ -359,10 +359,10 @@ export default function Home() {
               <span className="text-sm font-semibold uppercase tracking-widest text-gray-400">
                 Why TravelNest
               </span>
-              <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white leading-tight">
                 Your Journey,<br />Our Passion.
               </h2>
-              <p className="text-gray-500 leading-relaxed text-base">
+              <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-base">
                 We craft unforgettable travel experiences tailored just for you. From exotic beaches to majestic mountains — every trip is curated with care, safety, and adventure in mind.
               </p>
               <div className="grid grid-cols-2 gap-6">
@@ -373,12 +373,12 @@ export default function Home() {
                   { icon: "💎", title: "Best Prices", subtitle: "No hidden charges" },
                 ].map((item) => (
                   <div key={item.title} className="flex items-start gap-3">
-                    <div className="h-12 w-12 rounded-xl bg-gray-50 flex items-center justify-center text-xl shrink-0">
+                    <div className="h-12 w-12 rounded-xl bg-gray-50 dark:bg-card flex items-center justify-center text-xl shrink-0">
                       {item.icon}
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900 text-sm">{item.title}</p>
-                      <p className="text-xs text-gray-500">{item.subtitle}</p>
+                      <p className="font-bold text-gray-900 dark:text-white text-sm">{item.title}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{item.subtitle}</p>
                     </div>
                   </div>
                 ))}
@@ -398,11 +398,11 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       {/* TESTIMONIALS                               */}
       {/* ═══════════════════════════════════════════ */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-card/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <span className="text-sm font-semibold uppercase tracking-widest text-gray-400">Testimonials</span>
-            <h2 className="text-4xl font-black text-gray-900 mt-2">What Our Travelers Say</h2>
+            <h2 className="text-4xl font-black text-gray-900 dark:text-white mt-2">What Our Travelers Say</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
@@ -425,11 +425,11 @@ export default function Home() {
                 avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop",
               },
             ].map((t) => (
-              <div key={t.name} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div key={t.name} className="bg-white dark:bg-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow">
                 <div className="flex gap-1 mb-4">
                   {[1,2,3,4,5].map(s => <span key={s} className="text-amber-400">★</span>)}
                 </div>
-                <p className="text-gray-600 text-sm leading-relaxed mb-5">"{t.text}"</p>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-5">"{t.text}"</p>
                 <div className="flex items-center gap-3">
                   <img
                     src={t.avatar}
@@ -437,7 +437,7 @@ export default function Home() {
                     className="h-11 w-11 rounded-full object-cover"
                   />
                   <div>
-                    <p className="font-bold text-gray-900 text-sm">{t.name}</p>
+                    <p className="font-bold text-gray-900 dark:text-white text-sm">{t.name}</p>
                     <p className="text-xs text-gray-400">{t.location}</p>
                   </div>
                 </div>
@@ -489,7 +489,7 @@ export default function Home() {
 
 function SearchPill({ label, icon }: { label: string; icon: string }) {
   return (
-    <button className="flex items-center gap-2 px-5 py-4 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors rounded-full">
+    <button className="flex items-center gap-2 px-5 py-4 text-gray-700 dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors rounded-full">
       <span className="text-base">{icon}</span>
       <span>{label}</span>
       <span className="text-gray-400 text-xs">▾</span>
