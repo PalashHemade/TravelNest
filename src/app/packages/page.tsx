@@ -1,7 +1,6 @@
 import { PackageCard } from "@/components/packages/PackageCard";
 import { Search, ArrowRight } from "lucide-react";
-import dbConnect from "@/lib/db";
-import Package from "@/models/Package";
+import { getAllPackages } from "@/lib/db/packageService";
 import Link from "next/link";
 
 export const dynamic = 'force-dynamic';
@@ -16,22 +15,15 @@ interface PageProps {
 }
 
 async function getPackages(params: any) {
-  await dbConnect();
-  const query: any = {};
-  if (params.destination) {
-    query.destination = { $regex: params.destination, $options: 'i' };
-  }
-  if (params.minPrice || params.maxPrice) {
-    query.price = {};
-    if (params.minPrice) query.price.$gte = Number(params.minPrice);
-    if (params.maxPrice) query.price.$lte = Number(params.maxPrice);
-  }
-  const packages = await Package.find(query).lean();
-  return packages.map((pkg: any) => ({
+  const packages = await getAllPackages();
+  return packages.filter((pkg: any) => {
+    if (params.destination && !pkg.destination?.toLowerCase().includes(params.destination.toLowerCase())) return false;
+    if (params.minPrice && pkg.price < Number(params.minPrice)) return false;
+    if (params.maxPrice && pkg.price > Number(params.maxPrice)) return false;
+    return true;
+  }).map((pkg: any) => ({
     ...pkg,
-    _id: pkg._id.toString(),
-    createdAt: pkg.createdAt?.toISOString(),
-    updatedAt: pkg.updatedAt?.toISOString(),
+    _id: pkg.packageId,
   }));
 }
 

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
-import User from "@/models/User";
+import { createBooking } from "@/lib/db/bookingService";
+import { getUserByEmail } from "@/lib/db/userService";
 import { z } from "zod";
 
 const bookingSchema = z.object({
@@ -26,14 +25,13 @@ export async function POST(req: Request) {
         if (!result.success) {
             return NextResponse.json({ message: "Invalid input", errors: result.error.flatten().fieldErrors }, { status: 400 });
         }
-        await dbConnect();
-        const user = await User.findOne({ email: session.user.email }).select("_id");
+        const user = await getUserByEmail(session.user.email);
         if (!user) return NextResponse.json({ message: "User not found" }, { status: 404 });
 
-        const booking = await Booking.create({
-            user: user._id,
+        const booking = await createBooking({
+            userId: user._id, // use _id here to match what userService returns backward-compatibility
             package: result.data.packageId,
-            startDate: new Date(result.data.startDate),
+            startDate: new Date(result.data.startDate).toISOString(), // ensure date string for dynamo
             travelers: result.data.travelers,
             totalPrice: result.data.totalPrice,
             contactEmail: result.data.contactEmail,
@@ -42,7 +40,7 @@ export async function POST(req: Request) {
             status: 'pending',
             paymentStatus: 'unpaid',
         });
-        return NextResponse.json({ message: "Booking created", id: booking._id.toString() }, { status: 201 });
+        return NextResponse.json({ message: "Booking created", id: booking.bookingId }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }

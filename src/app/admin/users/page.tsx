@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
+import { getAllUsers } from "@/lib/db/userService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, ShieldCheck, User as UserIcon } from "lucide-react";
@@ -12,11 +11,8 @@ export default async function AdminUsersPage() {
     const session = await auth();
     if (!session?.user || session.user.role !== 'admin') redirect("/");
 
-    await dbConnect();
-    const users = await User.find({})
-        .sort({ createdAt: -1 })
-        .select('name email role provider createdAt')
-        .lean();
+    let users: any[] = await getAllUsers();
+    users.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     return (
         <div className="space-y-6">
@@ -53,7 +49,7 @@ export default async function AdminUsersPage() {
                                 </thead>
                                 <tbody className="divide-y">
                                     {users.map((user: any) => (
-                                        <tr key={user._id.toString()} className="py-3 hover:bg-muted/50 transition-colors">
+                                        <tr key={user.userId} className="py-3 hover:bg-muted/50 transition-colors">
                                             <td className="py-3 pr-4">
                                                 <div className="flex items-center gap-3">
                                                     <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-semibold text-sm shrink-0">

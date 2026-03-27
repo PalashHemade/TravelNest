@@ -1,13 +1,16 @@
-import dbConnect from "@/lib/db";
-import Destination from "@/models/Destination";
+import { getAllDestinations } from "@/lib/db/destinationService";
 import Link from "next/link";
 import { MapPin, ArrowRight } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
 export default async function DestinationsPage() {
-    await dbConnect();
-    const destinations = await Destination.find({}).sort({ featured: -1, name: 1 }).lean();
+    const destinations = await getAllDestinations();
+    destinations.sort((a: any, b: any) => {
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        return (a.name || '').localeCompare(b.name || '');
+    });
 
     return (
         <div className="flex flex-col min-h-screen">
@@ -57,7 +60,7 @@ export default async function DestinationsPage() {
                         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                             {destinations.map((dest: any) => (
                                 <div
-                                    key={dest._id.toString()}
+                                    key={dest._id}
                                     className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
                                 >
                                     <div className="relative h-60 overflow-hidden">

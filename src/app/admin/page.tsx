@@ -1,9 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
-import User from "@/models/User";
-import Package from "@/models/Package";
+import { getAllBookings } from "@/lib/db/bookingService";
+import { getAllUsers } from "@/lib/db/userService";
+import { getAllPackages } from "@/lib/db/packageService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, Calendar, Users, Package as PackageIcon } from "lucide-react";
 
@@ -14,26 +13,25 @@ export default async function AdminDashboardPage() {
     redirect("/"); // Or unauth page
   }
 
-  await dbConnect();
-
-  const totalRevenue = await Booking.aggregate([
-    { $match: { paymentStatus: 'paid' } },
-    { $group: { _id: null, total: { $sum: "$totalPrice" } } }
-  ]);
+  const allBookings: any[] = await getAllBookings();
+  const users: any[] = await getAllUsers();
+  const packages: any[] = await getAllPackages();
   
-  const revenue = totalRevenue[0]?.total || 0;
+  const revenue = allBookings
+    .filter(b => b.paymentStatus === 'paid')
+    .reduce((sum, b) => sum + (b.totalPrice || 0), 0);
   
-  const bookingsCount = await Booking.countDocuments();
-  const usersCount = await User.countDocuments();
-  const packagesCount = await Package.countDocuments();
+  const bookingsCount = allBookings.length;
+  const usersCount = users.length;
+  const packagesCount = packages.length;
 
-  // Recent Bookings
-  const recentBookings = await Booking.find({})
-    .sort({ createdAt: -1 })
-    .limit(5)
-    .populate('user', 'name email')
-    .populate('package', 'title')
-    .lean();
+  allBookings.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+  const recentBookingsRaw = allBookings.slice(0, 5);
+  const recentBookings = recentBookingsRaw.map(b => ({
+      ...b,
+      user: users.find(u => u.userId === b.userId),
+      package: packages.find(p => p.packageId === b.package)
+  }));
 
   return (
     <div className="flex-col md:flex space-y-8 pb-10">
@@ -100,7 +98,7 @@ export default async function AdminDashboardPage() {
                <CardTitle>Recent Sales</CardTitle>
                 <div className="space-y-8 mt-4">
                   {recentBookings.map((booking: any) => (
-                    <div key={booking._id.toString()} className="flex items-center">
+                    <div key={booking.bookingId} className="flex items-center">
                       <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
                         {booking.user?.name?.[0] || 'U'}
                       </div>

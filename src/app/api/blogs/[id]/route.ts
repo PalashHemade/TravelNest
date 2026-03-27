@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Blog from "@/models/Blog";
+import { deleteBlog, getBlogById } from "@/lib/db/blogService";
 
 export async function DELETE(
     req: NextRequest,
@@ -14,12 +13,9 @@ export async function DELETE(
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        await dbConnect();
-        const blog = await Blog.findByIdAndDelete(id);
-
-        if (!blog) {
-            return NextResponse.json({ error: "Blog not found" }, { status: 404 });
-        }
+        const existingBlog = await getBlogById(id);
+        if (!existingBlog) return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+        await deleteBlog(id);
 
         return NextResponse.json({ message: "Blog deleted successfully" }, { status: 200 });
     } catch (error) {

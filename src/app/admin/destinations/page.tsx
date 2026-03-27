@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Destination from "@/models/Destination";
+import { getAllDestinations } from "@/lib/db/destinationService";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,8 +14,8 @@ export default async function AdminDestinationsPage() {
     const session = await auth();
     if (!session?.user || session.user.role !== 'admin') redirect("/");
 
-    await dbConnect();
-    const destinations = await Destination.find({}).sort({ createdAt: -1 }).lean();
+    const destinations = await getAllDestinations();
+    destinations.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     return (
         <div className="space-y-6">
@@ -43,7 +42,7 @@ export default async function AdminDestinationsPage() {
             ) : (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                     {destinations.map((dest: any) => (
-                        <Card key={dest._id.toString()} className="overflow-hidden">
+                        <Card key={dest.destinationId} className="overflow-hidden">
                             <div className="relative h-40 w-full">
                                 <img src={dest.image} alt={dest.name} className="h-full w-full object-cover" />
                                 {dest.featured && (
@@ -60,11 +59,11 @@ export default async function AdminDestinationsPage() {
                                 <p className="text-sm text-muted-foreground line-clamp-2 mb-4">{dest.description}</p>
                                 <div className="flex gap-2">
                                     <Button variant="outline" size="sm" asChild className="flex-1">
-                                        <Link href={`/admin/destinations/${dest._id.toString()}/edit`}>
+                                        <Link href={`/admin/destinations/${dest.destinationId}/edit`}>
                                             <Pencil className="mr-1 h-3 w-3" /> Edit
                                         </Link>
                                     </Button>
-                                    <DeleteDestinationButton id={dest._id.toString()} />
+                                    <DeleteDestinationButton id={dest.destinationId} />
                                 </div>
                             </CardContent>
                         </Card>

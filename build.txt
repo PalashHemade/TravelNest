@@ -1,0 +1,70 @@
+
+> travel-agencu@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.7s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/22) ...
+  Generating static pages using 11 workers (5/22) 
+  Generating static pages using 11 workers (10/22) 
+  Generating static pages using 11 workers (16/22) 
+✓ Generating static pages using 11 workers (22/22) in 483.0ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /admin
+├ ○ /admin/blogs
+├ ○ /admin/blogs/new
+├ ƒ /admin/bookings
+├ ƒ /admin/custom-requests
+├ ƒ /admin/destinations
+├ ○ /admin/destinations/new
+├ ƒ /admin/packages
+├ ○ /admin/packages/new
+├ ƒ /admin/users
+├ ƒ /api/auth/[...nextauth]
+├ ƒ /api/blogs
+├ ƒ /api/blogs/[id]
+├ ƒ /api/bookings
+├ ƒ /api/bookings/[id]
+├ ƒ /api/custom-requests
+├ ƒ /api/custom-requests/[id]
+├ ƒ /api/destinations
+├ ƒ /api/destinations/[id]
+├ ƒ /api/packages
+├ ƒ /api/packages/[id]
+├ ƒ /api/register
+├ ƒ /blog
+├ ƒ /blog/[slug]
+├ ƒ /book/[packageId]
+├ ○ /contact
+├ ƒ /dashboard
+├ ƒ /dashboard/bookings
+├ ƒ /dashboard/bookings/[id]
+├ ƒ /dashboard/bookings/[id]/invoice
+├ ƒ /dashboard/bookings/new
+├ ƒ /dashboard/custom-request
+├ ƒ /dashboard/settings
+├ ƒ /destinations
+├ ○ /login
+├ ƒ /packages
+├ ƒ /packages/[slug]
+├ ƒ /payment/[bookingId]
+├ ○ /register
+├ ○ /robots.txt
+└ ƒ /sitemap.xml
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

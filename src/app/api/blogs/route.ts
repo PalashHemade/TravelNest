@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Blog from "@/models/Blog";
+import { getAllBlogs, createBlog } from "@/lib/db/blogService";
 
 export async function GET() {
     try {
-        await dbConnect();
-        const blogs = await Blog.find({}).sort({ createdAt: -1 });
+        const blogs = await getAllBlogs();
+        // Sort by createdAt desc
+        blogs.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
         return NextResponse.json(blogs);
     } catch (error) {
         return NextResponse.json({ error: "Failed to fetch blogs" }, { status: 500 });
@@ -21,9 +21,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        await dbConnect();
-
-        const blog = await Blog.create({
+        const blog = await createBlog({
             ...body,
             author: session.user.name || "Admin",
         });

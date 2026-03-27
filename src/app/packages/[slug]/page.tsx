@@ -9,8 +9,7 @@ import {
   Share2,
   Heart
 } from "lucide-react";
-import dbConnect from "@/lib/db";
-import Package from "@/models/Package";
+import { getPackageBySlug } from "@/lib/db/packageService";
 import { BookNowButton } from "@/components/packages/BookNowButton";
 
 interface PageProps {
@@ -20,16 +19,10 @@ interface PageProps {
 }
 
 async function getPackage(slug: string) {
-  await dbConnect();
-  const pkg = await Package.findOne({ slug }).lean();
+  const pkg = await getPackageBySlug(slug);
   if (!pkg) return null;
   
-  return {
-    ...pkg,
-    _id: pkg._id.toString(),
-    createdAt: pkg.createdAt?.toISOString(),
-    updatedAt: pkg.updatedAt?.toISOString(),
-  };
+  return pkg;
 }
 
 export default async function PackageDetailsPage({ params }: PageProps) {

@@ -1,25 +1,31 @@
 import { auth } from "@/auth";
 import { redirect, notFound } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
+import { getBookingById } from "@/lib/db/bookingService";
+import { getPackageById } from "@/lib/db/packageService";
+import { getUserById } from "@/lib/db/userService";
 import { PrintButton } from "@/components/dashboard/PrintButton";
 
 export default async function InvoicePage({ params }: { params: { id: string } }) {
   const session = await auth();
   if (!session?.user) redirect("/");
 
-  await dbConnect();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const booking: any = await Booking.findById(params.id)
-    .populate('package')
-    .populate('user')
-    .lean();
+  const rawBooking: any = await getBookingById(params.id);
+  if (!rawBooking) notFound();
+  
+  const pkg = await getPackageById(rawBooking.package);
+  const user = await getUserById(rawBooking.userId);
+  
+  const booking: any = {
+      ...rawBooking,
+      _id: rawBooking.bookingId,
+      package: pkg,
+      user: user
+  };
 
   if (!booking) notFound();
 
   // Access control: only admin or the booking owner can view
-  if (session.user.role !== 'admin' && booking.user?._id?.toString() !== session.user.id) {
+  if (session.user.role !== 'admin' && booking.user?.userId !== session.user.id) {
     return <div className="p-8 text-center text-red-500">Unauthorized access to this invoice.</div>;
   }
 

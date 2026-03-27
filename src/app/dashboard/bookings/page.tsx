@@ -1,8 +1,7 @@
 
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
-import Package from "@/models/Package"; // required for .populate("package") to work
+import { getBookingsByUser } from "@/lib/db/bookingService";
+import { getAllPackages } from "@/lib/db/packageService";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,27 +17,19 @@ export default async function BookingsPage() {
         redirect("/login");
     }
 
-    await dbConnect();
-
-    // We need the user's ID. In `next-auth.d.ts` we added `id` to the session.
-    // However, we need to make sure we have it. If not, we might need to fetch the user again.
-    // Let's assume session.user.id is available as per our earlier fix.
-    // If not, we'd look up by email.
-    
-    // Safer to look up by email to get the _id for the query if we aren't 100% sure the session ID is consistent with DB _id format (though it should be)
-    // Actually, let's trust the session ID if it exists, or fall back to email lookup if needed.
-    // But `Booking` model stores `user` as ObjectId.
-    
-    // Let's just do a quick lookup to be safe and avoid casting issues
-    const User = (await import("@/models/User")).default;
-    const user = await User.findOne({ email: session.user.email }).select("_id");
+    const { getUserByEmail } = await import("@/lib/db/userService");
+    const user: any = await getUserByEmail(session.user.email);
     
     if (!user) return <div>User not found</div>;
 
-    const bookings = await Booking.find({ user: user._id })
-        .populate("package")
-        .sort({ createdAt: -1 })
-        .lean();
+    const rawBookings = await getBookingsByUser(user.userId);
+    const packages = await getAllPackages();
+    
+    const bookings = rawBookings.map((b: any) => ({
+        ...b,
+        _id: b.bookingId, // To keep the JSX below working seamlessly
+        package: packages.find((p: any) => p.packageId === b.package)
+    })).sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     return (
         <div className="space-y-6">

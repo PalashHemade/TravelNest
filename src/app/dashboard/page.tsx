@@ -1,10 +1,9 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
+import { getBookingsByUser } from "@/lib/db/bookingService";
+import { getAllPackages } from "@/lib/db/packageService";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCard, Calendar, Activity } from "lucide-react";
-import Package from "@/models/Package"; // To ensure model compilation
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -13,16 +12,13 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  await dbConnect();
+  const rawBookings = await getBookingsByUser(session.user.id);
+  const packages = await getAllPackages();
   
-  // Ensure Package is registered
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const _ = Package; 
-
-  const bookings = await Booking.find({ user: session.user.id })
-    .populate('package', 'title image')
-    .sort({ createdAt: -1 })
-    .lean();
+  const bookings = rawBookings.map((b: any) => ({
+      ...b,
+      package: packages.find((p: any) => p.packageId === b.package)
+  })).sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
   const totalSpent = bookings.reduce((acc: number, curr: any) => acc + (curr.paymentStatus === 'paid' ? curr.totalPrice : 0), 0);
   const activeBookings = bookings.filter((b: any) => b.status === 'confirmed' || b.status === 'pending').length;
@@ -75,7 +71,7 @@ export default async function DashboardPage() {
                ) : (
                  <div className="grid gap-4">
                    {bookings.map((booking: any) => (
-                     <Card key={booking._id.toString()}>
+                     <Card key={booking.bookingId}>
                        <CardContent className="p-6 flex items-center justify-between">
                           <div className="flex items-center gap-4">
                              {booking.package.image && (

@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Destination from "@/models/Destination";
+import { getAllDestinations } from "@/lib/db/destinationService";
 import { CustomRequestForm } from "@/components/dashboard/CustomRequestForm";
 
 export const dynamic = 'force-dynamic';
@@ -10,8 +9,8 @@ export default async function CustomRequestPage() {
     const session = await auth();
     if (!session?.user?.email) redirect("/login");
 
-    await dbConnect();
-    const destinations = await Destination.find({}).select('name country').sort({ name: 1 }).lean();
+    const allDestinations = await getAllDestinations();
+    const destinations = allDestinations.sort((a: any, b: any) => (a.name || '').localeCompare(b.name || ''));
     const destNames = destinations.map((d: any) => `${d.name}, ${d.country}`);
 
     return (

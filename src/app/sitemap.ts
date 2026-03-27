@@ -1,16 +1,14 @@
 import { MetadataRoute } from 'next';
-import dbConnect from '@/lib/db';
-import Package from '@/models/Package';
-import Blog from '@/models/Blog';
+import { getAllPackages } from '@/lib/db/packageService';
+import { getAllBlogs } from '@/lib/db/blogService';
+export const dynamic = 'force-dynamic';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-    await dbConnect();
-
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
     // Get dynamic routes
-    const packages = await Package.find({}).select('slug updatedAt').lean();
-    const blogs = await Blog.find({}).select('slug updatedAt').lean();
+    const packages = await getAllPackages();
+    const blogs = await getAllBlogs();
 
     const packageUrls = packages.map((pkg: any) => ({
         url: `${baseUrl}/packages/${pkg.slug}`,

@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Package from "@/models/Package";
+import { getAllPackages } from "@/lib/db/packageService";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,8 +14,8 @@ export default async function AdminPackagesPage() {
     const session = await auth();
     if (!session?.user || session.user.role !== 'admin') redirect("/");
 
-    await dbConnect();
-    const packages = await Package.find({}).sort({ createdAt: -1 }).lean();
+    const packages = await getAllPackages();
+    packages.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     return (
         <div className="space-y-6">
@@ -55,7 +54,7 @@ export default async function AdminPackagesPage() {
                         </thead>
                         <tbody>
                             {packages.map((pkg: any) => (
-                                <tr key={pkg._id.toString()} className="border-b hover:bg-muted/30 transition-colors">
+                                <tr key={pkg.packageId} className="border-b hover:bg-muted/30 transition-colors">
                                     <td className="p-3 font-medium">{pkg.title}</td>
                                     <td className="p-3 text-muted-foreground">{pkg.destination}, {pkg.country}</td>
                                     <td className="p-3">{pkg.duration} days</td>
@@ -66,11 +65,11 @@ export default async function AdminPackagesPage() {
                                     <td className="p-3">
                                         <div className="flex gap-2">
                                             <Button variant="outline" size="sm" asChild>
-                                                <Link href={`/admin/packages/${pkg._id.toString()}/edit`}>
+                                                <Link href={`/admin/packages/${pkg.packageId}/edit`}>
                                                     <Pencil className="h-3 w-3" />
                                                 </Link>
                                             </Button>
-                                            <DeletePackageButton id={pkg._id.toString()} />
+                                            <DeletePackageButton id={pkg.packageId} />
                                         </div>
                                     </td>
                                 </tr>

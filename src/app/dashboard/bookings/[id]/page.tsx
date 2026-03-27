@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
-import Package from "@/models/Package";
+import { getBookingById } from "@/lib/db/bookingService";
+import { getPackageById } from "@/lib/db/packageService";
+import { getUserByEmail } from "@/lib/db/userService";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,21 +23,17 @@ export default async function BookingDetailsPage({ params }: BookingDetailsPageP
         redirect("/login");
     }
 
-    await dbConnect();
-
-    const User = (await import("@/models/User")).default;
-    const user = await User.findOne({ email: session.user.email }).select("_id p");
+    const user: any = await getUserByEmail(session.user.email);
     
     if (!user) return <div>User not found</div>;
 
-    let booking;
+    let booking: any;
     try {
-        booking = await Booking.findOne({ 
-            _id: params.id,
-            user: user._id 
-        })
-        .populate("package")
-        .lean();
+        const rawBooking: any = await getBookingById(params.id);
+        if (rawBooking && rawBooking.userId === user.userId) {
+             const pkg = await getPackageById(rawBooking.package);
+             booking = { ...rawBooking, _id: rawBooking.bookingId, package: pkg };
+        }
     } catch (e) {
         return <div>Invalid Booking ID</div>;
     }

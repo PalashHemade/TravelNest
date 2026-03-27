@@ -1,8 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import CustomPackageRequest from "@/models/CustomPackageRequest";
-import User from "@/models/User";
+import { getAllCustomRequests } from "@/lib/db/customRequestService";
 import { Badge } from "@/components/ui/badge";
 import { CustomRequestActions } from "@/components/admin/CustomRequestActions";
 
@@ -12,12 +10,8 @@ export default async function AdminCustomRequestsPage() {
     const session = await auth();
     if (!session?.user || session.user.role !== 'admin') redirect("/");
 
-    await dbConnect();
-    void User;
-    const requests = await CustomPackageRequest.find({})
-        .populate('user', 'name email')
-        .sort({ createdAt: -1 })
-        .lean();
+    const requests = await getAllCustomRequests();
+    requests.sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     const statusColors: Record<string, any> = {
         pending: 'outline',
@@ -34,7 +28,7 @@ export default async function AdminCustomRequestsPage() {
                     <div className="text-center py-12 text-muted-foreground">No custom requests yet.</div>
                 )}
                 {requests.map((req: any) => (
-                    <div key={req._id.toString()} className="rounded-lg border p-4 space-y-3">
+                    <div key={req.requestId} className="rounded-lg border p-4 space-y-3">
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <div className="font-semibold">{req.user?.name} <span className="text-muted-foreground font-normal text-sm">({req.user?.email})</span></div>
@@ -54,7 +48,7 @@ export default async function AdminCustomRequestsPage() {
                             </div>
                             <Badge variant={statusColors[req.status]}>{req.status}</Badge>
                         </div>
-                        <CustomRequestActions id={req._id.toString()} currentStatus={req.status} currentNote={req.adminNote || ''} />
+                        <CustomRequestActions id={req.requestId} currentStatus={req.status} currentNote={req.adminNote || ''} />
                     </div>
                 ))}
             </div>

@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
+import { getUserByEmail } from "@/lib/db/userService";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
@@ -14,8 +13,7 @@ export default async function SettingsPage() {
         redirect("/login");
     }
 
-    await dbConnect();
-    const user = await User.findOne({ email: session.user.email }).lean() as any;
+    const user: any = await getUserByEmail(session.user.email);
 
     if (!user) {
         return <div>User not found</div>;

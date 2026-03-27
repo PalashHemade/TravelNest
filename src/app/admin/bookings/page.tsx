@@ -1,9 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
-import Package from "@/models/Package";
-import User from "@/models/User";
+import { getAllBookings } from "@/lib/db/bookingService";
+import { getAllUsers } from "@/lib/db/userService";
+import { getAllPackages } from "@/lib/db/packageService";
 import { Badge } from "@/components/ui/badge";
 import { BookingStatusSelect } from "@/components/admin/BookingStatusSelect";
 
@@ -13,14 +12,17 @@ export default async function AdminBookingsPage() {
     const session = await auth();
     if (!session?.user || session.user.role !== 'admin') redirect("/");
 
-    await dbConnect();
-    // Ensure models are registered
-    void Package; void User;
-    const bookings = await Booking.find({})
-        .populate('user', 'name email')
-        .populate('package', 'title destination')
-        .sort({ createdAt: -1 })
-        .lean();
+    const [rawBookings, users, packages] = await Promise.all([
+        getAllBookings(),
+        getAllUsers(),
+        getAllPackages(),
+    ]);
+
+    const bookings = rawBookings.map((b: any) => ({
+        ...b,
+        user: users.find((u: any) => u.userId === b.userId),
+        package: packages.find((p: any) => p.packageId === b.package)
+    })).sort((a: any, b: any) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
 
     return (
         <div className="space-y-6">
@@ -43,7 +45,7 @@ export default async function AdminBookingsPage() {
                             <tr><td colSpan={7} className="p-6 text-center text-muted-foreground">No bookings yet.</td></tr>
                         )}
                         {bookings.map((booking: any) => (
-                            <tr key={booking._id.toString()} className="border-b hover:bg-muted/30 transition-colors">
+                            <tr key={booking.bookingId} className="border-b hover:bg-muted/30 transition-colors">
                                 <td className="p-3">
                                     <div className="font-medium">{booking.user?.name}</div>
                                     <div className="text-xs text-muted-foreground">{booking.user?.email}</div>
@@ -61,7 +63,7 @@ export default async function AdminBookingsPage() {
                                     </Badge>
                                 </td>
                                 <td className="p-3">
-                                    <BookingStatusSelect id={booking._id.toString()} currentStatus={booking.status} />
+                                    <BookingStatusSelect id={booking.bookingId} currentStatus={booking.status} />
                                 </td>
                             </tr>
                         ))}

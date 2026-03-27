@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import CustomPackageRequest from "@/models/CustomPackageRequest";
-import User from "@/models/User";
+import { getAllCustomRequests, createCustomRequest } from "@/lib/db/customRequestService";
+import { getUserByEmail, getAllUsers } from "@/lib/db/userService";
 import { z } from "zod";
 
 const requestSchema = z.object({
@@ -21,12 +20,17 @@ export async function GET() {
         return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
     }
     try {
-        await dbConnect();
-        const requests = await CustomPackageRequest.find({})
-            .populate('user', 'name email')
-            .sort({ createdAt: -1 })
-            .lean();
-        return NextResponse.json(requests.map((r: any) => ({ ...r, _id: r._id.toString() })));
+        const requests = await getAllCustomRequests();
+        const users = await getAllUsers();
+        const userMap = users.reduce((acc: any, u: any) => ({ ...acc, [u.userId]: u }), {});
+        const mapped = requests.map((r: any) => ({
+            ...r,
+            user: userMap[r.userId] || { name: 'Unknown', email: 'N/A' },
+            _id: r.requestId,
+        }));
+        // Sort by createdAt desc
+        mapped.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        return NextResponse.json(mapped);
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }
@@ -43,12 +47,11 @@ export async function POST(req: Request) {
         if (!result.success) {
             return NextResponse.json({ message: "Invalid input", errors: result.error.flatten().fieldErrors }, { status: 400 });
         }
-        await dbConnect();
-        const user = await User.findOne({ email: session.user.email }).select("_id");
+        const user = await getUserByEmail(session.user.email);
         if (!user) return NextResponse.json({ message: "User not found" }, { status: 404 });
 
-        const request = await CustomPackageRequest.create({ user: user._id, ...result.data });
-        return NextResponse.json({ message: "Request submitted", id: request._id.toString() }, { status: 201 });
+        const request = await createCustomRequest({ userId: (user as any).userId, ...result.data });
+        return NextResponse.json({ message: "Request submitted", id: request.requestId }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }

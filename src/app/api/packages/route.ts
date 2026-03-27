@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Package from "@/models/Package";
+import { createPackage, getPackageBySlug } from "@/lib/db/packageService";
 import { z } from "zod";
 
 const packageSchema = z.object({
@@ -30,12 +29,11 @@ export async function POST(req: Request) {
         if (!result.success) {
             return NextResponse.json({ message: "Invalid input", errors: result.error.flatten().fieldErrors }, { status: 400 });
         }
-        await dbConnect();
-        const existing = await Package.findOne({ slug: result.data.slug });
+        const existing = await getPackageBySlug(result.data.slug);
         if (existing) {
             return NextResponse.json({ message: "Slug already exists" }, { status: 409 });
         }
-        const pkg = await Package.create(result.data);
+        const pkg = await createPackage(result.data);
         return NextResponse.json({ message: "Package created", id: pkg._id.toString() }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

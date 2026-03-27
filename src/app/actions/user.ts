@@ -1,8 +1,7 @@
 'use server'
 
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
+import { updateUser, getUserByEmail } from "@/lib/db/userService";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
 
@@ -21,7 +20,8 @@ export async function updateProfile(formData: FormData) {
     const password = formData.get("password") as string;
 
     try {
-        await dbConnect();
+        const user = await getUserByEmail(session.user.email);
+        if (!user) return { message: "User not found", success: false };
 
         const updateData: any = { name };
 
@@ -30,7 +30,7 @@ export async function updateProfile(formData: FormData) {
             updateData.password = hashedPassword;
         }
 
-        await User.updateOne({ email: session.user.email }, updateData);
+        await updateUser((user as any).userId, updateData);
 
         revalidatePath("/dashboard/settings");
         return { message: "Profile updated successfully", success: true };

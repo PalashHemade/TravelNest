@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
+import { createUser, getUserByEmail } from "@/lib/db/userService";
 import { z } from "zod";
 
 const registerSchema = z.object({
@@ -25,9 +24,7 @@ export async function POST(req: Request) {
 
         const { name, email, password, role } = result.data;
 
-        await dbConnect();
-
-        const existingUser = await User.findOne({ email });
+        const existingUser = await getUserByEmail(email);
 
         if (existingUser) {
             return NextResponse.json(
@@ -38,7 +35,7 @@ export async function POST(req: Request) {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = await User.create({
+        const newUser = await createUser({
             name,
             email,
             password: hashedPassword,

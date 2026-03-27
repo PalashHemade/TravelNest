@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react";
-import dbConnect from "@/lib/db";
-import Blog from "@/models/Blog";
+import { getBlogBySlug } from "@/lib/db/blogService";
 
 interface PageProps {
   params: {
@@ -11,8 +10,8 @@ interface PageProps {
 }
 
 export default async function BlogDetailsPage({ params }: PageProps) {
-  await dbConnect();
-  const blog = await Blog.findOne({ slug: params.slug }).lean();
+  const slugParams = await params;
+  const blog: any = await getBlogBySlug(slugParams.slug);
 
   if (!blog) {
     return <div>Blog post not found</div>

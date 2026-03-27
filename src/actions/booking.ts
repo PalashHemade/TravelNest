@@ -1,9 +1,8 @@
 'use server'
 
 import { z } from "zod";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
-import Package from "@/models/Package";
+import { createBooking as createDbBooking } from "@/lib/db/bookingService";
+import { getPackageById } from "@/lib/db/packageService";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
@@ -39,9 +38,7 @@ export async function createBooking(prevState: any, formData: FormData) {
 
     const { packageId, startDate, travelers, contactEmail, contactPhone, specialRequests } = validatedFields.data;
 
-    await dbConnect();
-
-    const pkg = await Package.findById(packageId);
+    const pkg: any = await getPackageById(packageId);
     if (!pkg) {
         return { error: "Package not found." };
     }
@@ -53,10 +50,10 @@ export async function createBooking(prevState: any, formData: FormData) {
     const totalPrice = pkg.price * travelers;
 
     try {
-        const newBooking = await Booking.create({
-            user: session.user.id,
+        const newBooking = await createDbBooking({
+            userId: session.user.id,
             package: packageId,
-            startDate: new Date(startDate),
+            startDate: new Date(startDate).toISOString(),
             travelers,
             totalPrice,
             contactEmail,
@@ -66,7 +63,7 @@ export async function createBooking(prevState: any, formData: FormData) {
             paymentStatus: 'unpaid',
         });
 
-        return { success: true, bookingId: newBooking._id.toString() };
+        return { success: true, bookingId: newBooking.bookingId };
     } catch (error) {
         console.error("Booking creation error:", error);
         return { error: "Failed to create booking. Please try again." };

@@ -3,8 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
-import dbConnect from "@/lib/db";
-import User from "@/models/User";
+import { getUserByEmail, createUser } from "@/lib/db/userService";
 import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -33,8 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
                 const { email, password, role: selectedRole } = parsedCredentials.data;
 
-                await dbConnect();
-                const user = await User.findOne({ email }).select('+password');
+                const user: any = await getUserByEmail(email);
 
                 if (!user) return null;
                 if (!user.password) return null; // OAuth user — no password set
@@ -61,10 +59,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     token.roleMismatch = true;
                     return token;
                 }
-                await dbConnect();
-                const dbUser = await User.findOne({ email: (user as any).email });
+                const dbUser: any = await getUserByEmail((user as any).email);
                 if (dbUser) {
-                    token.id = dbUser._id.toString();
+                    token.id = dbUser.userId;
                     token.role = dbUser.role;
                     token.email = dbUser.email;
                     token.name = dbUser.name;
@@ -78,10 +75,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 return '/login?error=RoleMismatch';
             }
             if (account?.provider === 'google') {
-                await dbConnect();
-                const existingUser = await User.findOne({ email: (user as any).email });
+                const existingUser = await getUserByEmail((user as any).email);
                 if (!existingUser) {
-                    await User.create({
+                    await createUser({
                         name: user.name || '',
                         email: (user as any).email || '',
                         image: user.image || '',

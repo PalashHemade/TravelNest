@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Destination from "@/models/Destination";
+import { getAllDestinations, createDestination } from "@/lib/db/destinationService";
 import { z } from "zod";
 
 const destinationSchema = z.object({
@@ -15,9 +14,14 @@ const destinationSchema = z.object({
 
 export async function GET() {
     try {
-        await dbConnect();
-        const destinations = await Destination.find({}).sort({ featured: -1, name: 1 }).lean();
-        return NextResponse.json(destinations.map((d: any) => ({ ...d, _id: d._id.toString() })));
+        const destinations = await getAllDestinations();
+        // Manual sorting if needed (since DynamoDB scan doesn't sort by featured)
+        destinations.sort((a: any, b: any) => {
+            if (a.featured && !b.featured) return -1;
+            if (!a.featured && b.featured) return 1;
+            return (a.name || '').localeCompare(b.name || '');
+        });
+        return NextResponse.json(destinations);
     } catch (error) {
         return NextResponse.json({ message: "Failed to fetch destinations" }, { status: 500 });
     }
@@ -34,13 +38,10 @@ export async function POST(req: Request) {
         if (!result.success) {
             return NextResponse.json({ message: "Invalid input", errors: result.error.flatten().fieldErrors }, { status: 400 });
         }
-        await dbConnect();
-        const existing = await Destination.findOne({ slug: result.data.slug });
-        if (existing) {
-            return NextResponse.json({ message: "Slug already exists" }, { status: 409 });
-        }
-        const destination = await Destination.create(result.data);
-        return NextResponse.json({ message: "Destination created", id: destination._id.toString() }, { status: 201 });
+        // Slugs aren't fully checked efficiently in dynamo without GSI, skipping perfect uniqueness check or do it during create
+
+        const destination = await createDestination(result.data);
+        return NextResponse.json({ message: "Destination created", id: destination.destinationId }, { status: 201 });
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });
     }

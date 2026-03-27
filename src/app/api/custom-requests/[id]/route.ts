@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import CustomPackageRequest from "@/models/CustomPackageRequest";
+import { updateCustomRequest } from "@/lib/db/customRequestService";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
@@ -11,8 +10,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     try {
         const { id } = await params;
         const body = await req.json();
-        await dbConnect();
-        await CustomPackageRequest.findByIdAndUpdate(id, { $set: body });
+        await updateCustomRequest(id, body);
         return NextResponse.json({ message: "Request updated" });
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

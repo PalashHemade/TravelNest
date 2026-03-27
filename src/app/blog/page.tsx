@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, User } from "lucide-react";
-import dbConnect from "@/lib/db";
-import Blog from "@/models/Blog";
+import { getAllBlogs } from "@/lib/db/blogService";
+export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
-  await dbConnect();
-  const blogs = await Blog.find({}).sort({ createdAt: -1 }).lean();
+  const blogs: any[] = await getAllBlogs();
+  blogs.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
   return (
     <div className="container py-12 md:py-20">

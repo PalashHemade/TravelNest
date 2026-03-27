@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import dbConnect from "@/lib/db";
-import Booking from "@/models/Booking";
+import { updateBooking, getBookingById } from "@/lib/db/bookingService";
 
 export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
     const session = await auth();
@@ -11,8 +10,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     try {
         const { id } = await params;
         const body = await req.json();
-        await dbConnect();
-        await Booking.findByIdAndUpdate(id, { $set: body });
+        const booking = await getBookingById(id);
+        if (!booking) return NextResponse.json({ message: "Booking not found" }, { status: 404 });
+        await updateBooking(id, (booking as any).userId, body);
         return NextResponse.json({ message: "Booking updated" });
     } catch (error) {
         return NextResponse.json({ message: "Internal server error" }, { status: 500 });

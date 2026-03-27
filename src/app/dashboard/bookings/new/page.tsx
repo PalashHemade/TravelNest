@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import dbConnect from "@/lib/db";
-import Package from "@/models/Package";
+import { getAllPackages } from "@/lib/db/packageService";
 import { NewBookingForm } from "@/components/dashboard/NewBookingForm";
 
 export const dynamic = 'force-dynamic';
@@ -16,11 +15,11 @@ export default async function NewBookingPage({ searchParams }: PageProps) {
 
     const { packageId } = await searchParams;
 
-    await dbConnect();
-    const packages = await Package.find({}).select('title price duration destination maxPeople').sort({ title: 1 }).lean();
+    const allPackages = await getAllPackages();
+    const packages = allPackages.sort((a: any, b: any) => (a.title || '').localeCompare(b.title || ''));
 
     const serialized = packages.map((p: any) => ({
-        _id: p._id.toString(),
+        _id: p.packageId,
         title: p.title,
         price: p.price,
         duration: p.duration,
