@@ -58,29 +58,42 @@ export default function RegisterPage() {
   const selectedRole = form.watch("role");
 
   return (
-    <div className="container relative flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0 min-h-screen">
-      {/* Left panel */}
-      <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
-        <div className="absolute inset-0 bg-zinc-900" />
-        <div className="relative z-20 flex items-center text-lg font-medium">
-          <Link href="/">TravelNest</Link>
+    <div className="min-h-screen grid lg:grid-cols-2">
+      {/* Left panel — photo */}
+      <div className="relative hidden lg:flex flex-col justify-between p-10 overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=1935&auto=format&fit=crop')",
+          }}
+        >
+          <div className="absolute inset-0 bg-black/55" />
         </div>
-        <div className="relative z-20 mt-auto">
-          <blockquote className="space-y-2">
-            <p className="text-lg">
-              "TravelNest helped me find the perfect vacation spot. The booking process was seamless and the support was excellent."
-            </p>
-            <footer className="text-sm">Sofia Davis</footer>
-          </blockquote>
+
+        {/* Logo */}
+        <div className="relative z-10 flex items-center gap-2 text-white">
+          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-cyan-400 flex items-center justify-center">
+            <span className="text-sm">🌍</span>
+          </div>
+          <Link href="/" className="text-lg font-black">TravelNest</Link>
+        </div>
+
+        {/* Quote */}
+        <div className="relative z-10 text-white">
+          <p className="text-xl font-medium leading-relaxed mb-4 max-w-sm">
+            "TravelNest helped me find the perfect vacation spot. The booking process was seamless and the support was excellent."
+          </p>
+          <p className="text-sm text-white/60">— Sofia Davis, Frequent Traveler</p>
         </div>
       </div>
 
-      {/* Right panel */}
-      <div className="lg:p-8">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-5 sm:w-[420px]">
-          <div className="flex flex-col space-y-1 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">Create an account</h1>
-            <p className="text-sm text-muted-foreground">First, choose how you want to use TravelNest</p>
+      {/* Right panel — form */}
+      <div className="flex items-center justify-center px-6 py-12 bg-background">
+        <div className="w-full max-w-[420px] space-y-6">
+          <div className="text-center">
+            <h1 className="text-3xl font-black text-foreground">Create an account</h1>
+            <p className="text-muted-foreground text-sm mt-1">First, choose how you want to use TravelNest</p>
           </div>
 
           <Form {...form}>
@@ -92,38 +105,35 @@ export default function RegisterPage() {
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold">I am signing up as a…</FormLabel>
+                    <FormLabel className="text-sm font-semibold text-foreground">I am signing up as a…</FormLabel>
                     <FormControl>
                       <div className="grid grid-cols-2 gap-3 mt-1">
-
-                        {/* Traveler card */}
                         <button
                           type="button"
                           onClick={() => field.onChange("user")}
-                          className={`relative flex flex-col items-center gap-2 rounded-xl border-2 px-4 py-5 text-center transition-all cursor-pointer select-none focus:outline-none ${
+                          className={`relative flex flex-col items-center gap-2 rounded-2xl border-2 px-4 py-5 text-center transition-all cursor-pointer select-none focus:outline-none ${
                             field.value === "user"
-                              ? "border-primary bg-primary/5 shadow-md ring-2 ring-primary/20"
-                              : "border-border hover:border-primary/40 hover:bg-muted/50"
+                              ? "border-foreground bg-accent shadow-md"
+                              : "border-border hover:border-foreground/40 hover:bg-accent/50"
                           }`}
                         >
                           {field.value === "user" && (
-                            <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs text-white font-bold">✓</span>
+                            <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs text-background font-bold">✓</span>
                           )}
                           <span className="text-3xl">🧳</span>
                           <div>
-                            <p className="font-bold text-sm">Traveler</p>
+                            <p className="font-bold text-sm text-foreground">Traveler</p>
                             <p className="text-xs text-muted-foreground mt-0.5 leading-tight">Browse &amp; book travel packages</p>
                           </div>
                         </button>
 
-                        {/* Admin card */}
                         <button
                           type="button"
                           onClick={() => field.onChange("admin")}
-                          className={`relative flex flex-col items-center gap-2 rounded-xl border-2 px-4 py-5 text-center transition-all cursor-pointer select-none focus:outline-none ${
+                          className={`relative flex flex-col items-center gap-2 rounded-2xl border-2 px-4 py-5 text-center transition-all cursor-pointer select-none focus:outline-none ${
                             field.value === "admin"
-                              ? "border-orange-500 bg-orange-50 dark:bg-orange-950/20 shadow-md ring-2 ring-orange-500/20"
-                              : "border-border hover:border-orange-400/40 hover:bg-muted/50"
+                              ? "border-orange-500 bg-orange-500/10 shadow-md"
+                              : "border-border hover:border-orange-400/40 hover:bg-orange-500/5"
                           }`}
                         >
                           {field.value === "admin" && (
@@ -131,7 +141,7 @@ export default function RegisterPage() {
                           )}
                           <span className="text-3xl">🛠️</span>
                           <div>
-                            <p className="font-bold text-sm">Admin</p>
+                            <p className="font-bold text-sm text-foreground">Admin</p>
                             <p className="text-xs text-muted-foreground mt-0.5 leading-tight">Manage destinations &amp; packages</p>
                           </div>
                         </button>
@@ -142,11 +152,11 @@ export default function RegisterPage() {
                 )}
               />
 
-              {/* Live confirmation banner */}
-              <div className={`rounded-lg px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${
+              {/* Confirmation banner */}
+              <div className={`rounded-xl px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${
                 selectedRole === "admin"
-                  ? "bg-orange-100 text-orange-800 dark:bg-orange-950/40 dark:text-orange-300"
-                  : "bg-primary/10 text-primary"
+                  ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+                  : "bg-accent text-foreground border border-border"
               }`}>
                 <span>{selectedRole === "admin" ? "🛠️" : "🧳"}</span>
                 <span>
@@ -157,14 +167,15 @@ export default function RegisterPage() {
                 </span>
               </div>
 
-              {/* Name / Email / Password */}
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                    <FormLabel className="text-foreground font-semibold text-sm">Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" className="rounded-xl border-border h-11" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -174,8 +185,10 @@ export default function RegisterPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl><Input placeholder="name@example.com" {...field} /></FormControl>
+                    <FormLabel className="text-foreground font-semibold text-sm">Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="name@example.com" className="rounded-xl border-border h-11" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -185,19 +198,20 @@ export default function RegisterPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl><Input type="password" placeholder="••••••" {...field} /></FormControl>
+                    <FormLabel className="text-foreground font-semibold text-sm">Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••" className="rounded-xl border-border h-11" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              {/* Submit button changes label & color based on role */}
               <Button
-                className={`w-full font-semibold ${
+                className={`w-full h-12 font-bold text-base ${
                   selectedRole === "admin"
                     ? "bg-orange-500 hover:bg-orange-600 text-white"
-                    : ""
+                    : "bg-foreground text-background hover:bg-foreground/85"
                 }`}
                 type="submit"
                 disabled={isLoading}
@@ -208,14 +222,23 @@ export default function RegisterPage() {
             </form>
           </Form>
 
+          {/* Divider */}
           <div className="relative">
-            <div className="absolute inset-0 flex items-center"><span className="w-full border-t" /></div>
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+              <span className="bg-background px-3 text-muted-foreground font-medium">Or continue with</span>
             </div>
           </div>
 
-          <Button variant="outline" type="button" disabled={isLoading} onClick={() => signIn("google", { callbackUrl: "/dashboard" })}>
+          <Button
+            variant="outline"
+            type="button"
+            disabled={isLoading}
+            onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+            className="w-full h-12 font-medium"
+          >
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -226,13 +249,15 @@ export default function RegisterPage() {
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335" />
               </svg>
             )}
-            Google
+            Continue with Google
           </Button>
 
-          <div className="px-8 text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="underline underline-offset-4 hover:text-primary">Sign in</Link>
-          </div>
+            <Link href="/login" className="font-semibold text-foreground hover:underline underline-offset-4">
+              Sign in
+            </Link>
+          </p>
         </div>
       </div>
     </div>

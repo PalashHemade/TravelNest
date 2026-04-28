@@ -159,7 +159,7 @@ export default function Home() {
               <SearchPill label="People" icon="👥" />
               <Link
                 href="/packages"
-                className="ml-auto px-6 py-4 bg-black text-white font-semibold rounded-full hover:bg-gray-800 transition-all whitespace-nowrap text-sm"
+                className="ml-auto px-6 py-4 bg-foreground text-background font-semibold rounded-full hover:bg-foreground/85 transition-all whitespace-nowrap text-sm"
               >
                 Explore now
               </Link>
@@ -193,9 +193,9 @@ export default function Home() {
             {/* Prev */}
             <button
               onClick={prev}
-              className="hidden md:flex absolute -left-6 z-10 h-12 w-12 rounded-full border border-gray-200 bg-white shadow-md items-center justify-center hover:bg-gray-50 transition-all shrink-0"
+              className="hidden md:flex absolute -left-6 z-10 h-12 w-12 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-card shadow-md items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shrink-0"
             >
-              <ChevronLeft className="h-5 w-5 text-gray-600" />
+              <ChevronLeft className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
 
             {/* Cards Grid */}
@@ -234,9 +234,9 @@ export default function Home() {
             {/* Next */}
             <button
               onClick={next}
-              className="hidden md:flex absolute -right-6 z-10 h-12 w-12 rounded-full border border-gray-200 bg-white shadow-md items-center justify-center hover:bg-gray-50 transition-all shrink-0"
+              className="hidden md:flex absolute -right-6 z-10 h-12 w-12 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-card shadow-md items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-all shrink-0"
             >
-              <ChevronRight className="h-5 w-5 text-gray-600" />
+              <ChevronRight className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
           </div>
 
@@ -305,7 +305,7 @@ export default function Home() {
                     <StarRating count={pkg.rating} />
                     <Link
                       href={pkg.href}
-                      className="px-5 py-2.5 bg-black text-white text-sm font-semibold rounded-full hover:bg-gray-800 transition-all"
+                      className="px-5 py-2.5 bg-foreground text-background text-sm font-semibold rounded-full hover:bg-foreground/85 transition-all"
                     >
                       Booking now
                     </Link>
@@ -385,7 +385,7 @@ export default function Home() {
               </div>
               <Link
                 href="/packages"
-                className="inline-flex items-center gap-2 px-7 py-3.5 bg-black text-white rounded-full font-semibold hover:bg-gray-800 transition-all"
+                className="inline-flex items-center gap-2 px-7 py-3.5 bg-foreground text-background rounded-full font-semibold hover:bg-foreground/85 transition-all"
               >
                 Start Exploring
                 <ArrowRight className="h-4 w-4" />

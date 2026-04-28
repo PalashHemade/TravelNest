@@ -118,7 +118,7 @@ export function Navbar() {
                     "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-all",
                     isTransparent
                       ? "text-white/90 hover:bg-white/10"
-                      : "text-gray-700 hover:bg-gray-100"
+                      : "text-foreground/70 hover:text-foreground hover:bg-accent"
                   )}
                 >
                   <User className="h-4 w-4" />
@@ -126,7 +126,12 @@ export function Navbar() {
                 </Link>
                 <button
                   onClick={() => signOut()}
-                  className="px-5 py-2 rounded-full bg-black text-white text-sm font-semibold hover:bg-gray-800 transition-all"
+                  className={cn(
+                    "px-5 py-2 rounded-full text-sm font-semibold transition-all",
+                    isTransparent
+                      ? "bg-white text-black hover:bg-white/90"
+                      : "bg-foreground text-background hover:bg-foreground/85"
+                  )}
                 >
                   Sign Out
                 </button>
@@ -139,14 +144,19 @@ export function Navbar() {
                     "px-4 py-2 rounded-full text-sm font-medium transition-all",
                     isTransparent
                       ? "text-white/80 hover:text-white hover:bg-white/10"
-                      : "text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                      : "text-foreground/70 hover:text-foreground hover:bg-accent"
                   )}
                 >
                   Log in
                 </Link>
                 <Link
                   href="/register"
-                  className="px-5 py-2 rounded-full bg-black text-white text-sm font-semibold hover:bg-gray-800 transition-all shadow-md"
+                  className={cn(
+                    "px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm",
+                    isTransparent
+                      ? "bg-white text-black hover:bg-white/90"
+                      : "bg-foreground text-background hover:bg-foreground/85"
+                  )}
                 >
                   Sign up
                 </Link>
@@ -170,7 +180,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 shadow-xl">
+        <div className="md:hidden bg-white dark:bg-gray-950 border-t border-gray-100 dark:border-gray-800 shadow-xl">
           <div className="container mx-auto px-4 py-4 flex flex-col gap-1">
             {navLinks.map((link) => (
               <Link
@@ -188,16 +198,16 @@ export function Navbar() {
                 {link.hasDropdown && <ChevronDown className="h-4 w-4 opacity-60" />}
               </Link>
             ))}
-            <div className="border-t border-gray-100 mt-2 pt-3 flex flex-col gap-2">
+            <div className="border-t border-gray-100 dark:border-gray-800 mt-2 pt-3 flex flex-col gap-2">
               {session ? (
                 <>
                   <Link href="/dashboard" onClick={() => setIsOpen(false)}
-                    className="text-center py-3 px-4 rounded-xl bg-gray-100 text-gray-700 font-medium text-sm"
+                    className="text-center py-3 px-4 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium text-sm"
                   >
                     Dashboard
                   </Link>
                   <button onClick={() => signOut()}
-                    className="py-3 px-4 rounded-xl bg-black text-white font-semibold text-sm"
+                    className="py-3 px-4 rounded-xl bg-foreground text-background font-semibold text-sm"
                   >
                     Sign Out
                   </button>
@@ -205,12 +215,12 @@ export function Navbar() {
               ) : (
                 <>
                   <Link href="/login" onClick={() => setIsOpen(false)}
-                    className="text-center py-3 px-4 rounded-xl bg-gray-100 text-gray-700 font-medium text-sm"
+                    className="text-center py-3 px-4 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-medium text-sm"
                   >
                     Log in
                   </Link>
                   <Link href="/register" onClick={() => setIsOpen(false)}
-                    className="text-center py-3 px-4 rounded-xl bg-black text-white font-semibold text-sm"
+                    className="text-center py-3 px-4 rounded-xl bg-foreground text-background font-semibold text-sm"
                   >
                     Sign up
                   </Link>

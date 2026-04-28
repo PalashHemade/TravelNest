@@ -62,7 +62,7 @@ export default function ContactPage() {
       </section>
 
       {/* ══ CONTACT SECTION ══ */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white dark:bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             {/* Left: Info */}
@@ -70,10 +70,10 @@ export default function ContactPage() {
               <span className="text-sm font-semibold uppercase tracking-widest text-gray-400">
                 Get in Touch
               </span>
-              <h2 className="text-4xl font-black text-gray-900 mt-2 mb-4">
+              <h2 className="text-4xl font-black text-gray-900 dark:text-white mt-2 mb-4">
                 Have Any Question?
               </h2>
-              <p className="text-gray-500 leading-relaxed mb-10 text-base">
+              <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-10 text-base">
                 Do not hesitate to give us a call. We are an expert team and we are happy to talk to you. Our travel specialists are available 7 days a week.
               </p>
 
@@ -85,26 +85,26 @@ export default function ContactPage() {
                     label: "Phone",
                     value: "+62 6943 6956",
                     sub: "Mon-Fri from 8am to 6pm",
-                    color: "bg-black",
+                    color: "bg-black dark:bg-gray-700",
                   },
                   {
                     icon: Mail,
                     label: "Email",
                     value: "hello@travelnest.com",
                     sub: "We reply within 24 hours",
-                    color: "bg-black",
+                    color: "bg-black dark:bg-gray-700",
                   },
                   {
                     icon: MapPin,
                     label: "Address",
                     value: "123 Travel Lane, Adventure City",
                     sub: "AC 12345, United States",
-                    color: "bg-black",
+                    color: "bg-black dark:bg-gray-700",
                   },
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="flex items-start gap-4 p-5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all"
+                    className="flex items-start gap-4 p-5 rounded-2xl border border-gray-100 dark:border-gray-800 hover:border-gray-200 dark:hover:border-gray-700 hover:shadow-sm transition-all"
                   >
                     <div className={`h-12 w-12 rounded-xl ${item.color} flex items-center justify-center shrink-0`}>
                       <item.icon className="h-5 w-5 text-white" />
@@ -113,14 +113,14 @@ export default function ContactPage() {
                       <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
                         {item.label}
                       </p>
-                      <p className="font-bold text-gray-900">{item.value}</p>
+                      <p className="font-bold text-gray-900 dark:text-white">{item.value}</p>
                       <p className="text-sm text-gray-400">{item.sub}</p>
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Dark Contact Box (matching Figma "Have Any Question?") */}
+              {/* Dark Contact Box */}
               <div className="mt-8 bg-gray-950 rounded-2xl p-7 text-white">
                 <h3 className="text-xl font-bold mb-2">Have Any Question?</h3>
                 <p className="text-gray-400 text-sm mb-6 leading-relaxed">
@@ -140,8 +140,8 @@ export default function ContactPage() {
             </div>
 
             {/* Right: Form */}
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8">
-              <h3 className="text-2xl font-black text-gray-900 mb-2">Send a Message</h3>
+            <div className="bg-white dark:bg-card rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 p-8">
+              <h3 className="text-2xl font-black text-gray-900 dark:text-white mb-2">Send a Message</h3>
               <p className="text-gray-400 text-sm mb-8">
                 Fill out the form below and we'll respond within 24 hours.
               </p>
@@ -153,11 +153,11 @@ export default function ContactPage() {
                       name="name"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-700 font-semibold text-sm">Your Name</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Your Name</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="John Doe"
-                              className="rounded-xl border-gray-200 focus-visible:ring-gray-900 h-11"
+                              className="rounded-xl border-gray-200 dark:border-gray-700 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-400 h-11"
                               {...field}
                             />
                           </FormControl>
@@ -170,11 +170,11 @@ export default function ContactPage() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-700 font-semibold text-sm">Email Address</FormLabel>
+                          <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Email Address</FormLabel>
                           <FormControl>
                             <Input
                               placeholder="name@example.com"
-                              className="rounded-xl border-gray-200 focus-visible:ring-gray-900 h-11"
+                              className="rounded-xl border-gray-200 dark:border-gray-700 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-400 h-11"
                               {...field}
                             />
                           </FormControl>
@@ -188,11 +188,11 @@ export default function ContactPage() {
                     name="subject"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700 font-semibold text-sm">Subject</FormLabel>
+                        <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Subject</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="Inquiry about packages..."
-                            className="rounded-xl border-gray-200 focus-visible:ring-gray-900 h-11"
+                            className="rounded-xl border-gray-200 dark:border-gray-700 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-400 h-11"
                             {...field}
                           />
                         </FormControl>
@@ -205,11 +205,11 @@ export default function ContactPage() {
                     name="message"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-gray-700 font-semibold text-sm">Message</FormLabel>
+                        <FormLabel className="text-gray-700 dark:text-gray-300 font-semibold text-sm">Message</FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Tell us about your travel plans..."
-                            className="rounded-xl border-gray-200 focus-visible:ring-gray-900 min-h-[140px] resize-none"
+                            className="rounded-xl border-gray-200 dark:border-gray-700 focus-visible:ring-gray-900 dark:focus-visible:ring-gray-400 min-h-[140px] resize-none"
                             {...field}
                           />
                         </FormControl>
@@ -219,7 +219,7 @@ export default function ContactPage() {
                   />
                   <Button
                     type="submit"
-                    className="w-full h-12 rounded-full bg-black hover:bg-gray-800 text-white font-bold text-base"
+                    className="w-full h-12 rounded-full bg-foreground hover:bg-foreground/85 text-background font-bold text-base"
                   >
                     <Send className="mr-2 h-4 w-4" />
                     Send Message
@@ -231,8 +231,8 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* ══ MAP / DECORATIVE BOTTOM ══ */}
-      <section className="bg-gray-50 py-16">
+      {/* ══ STATS BOTTOM ══ */}
+      <section className="bg-gray-50 dark:bg-card/50 py-16">
         <div className="container mx-auto px-4 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
@@ -242,8 +242,8 @@ export default function ContactPage() {
               { value: "8+", label: "Years Experience" },
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <p className="text-4xl font-black text-gray-900 mb-1">{stat.value}</p>
-                <p className="text-gray-500 text-sm">{stat.label}</p>
+                <p className="text-4xl font-black text-gray-900 dark:text-white mb-1">{stat.value}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">{stat.label}</p>
               </div>
             ))}
           </div>

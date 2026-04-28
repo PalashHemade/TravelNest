@@ -3,155 +3,109 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ─────────────────────────────────────────────
+   Tailwind v4: define ALL design tokens here.
+   These are the light-mode defaults.
+   Dark overrides are done via CSS vars below.
+───────────────────────────────────────────── */
 @theme {
   --font-sans: 'Poppins', ui-sans-serif, system-ui, sans-serif;
 
+  --radius: 0.75rem;
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  /* Light mode color tokens — static values Tailwind v4 can resolve */
+  --color-background:         hsl(0 0% 100%);
+  --color-foreground:         hsl(0 0% 8%);
+
+  --color-card:               hsl(0 0% 100%);
+  --color-card-foreground:    hsl(0 0% 8%);
+
+  --color-popover:            hsl(0 0% 100%);
+  --color-popover-foreground: hsl(0 0% 8%);
+
+  --color-primary:            hsl(0 0% 10%);
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  --color-secondary:          hsl(0 0% 96%);
+  --color-secondary-foreground: hsl(0 0% 10%);
+
+  --color-muted:              hsl(0 0% 96%);
+  --color-muted-foreground:   hsl(0 0% 45%);
+
+  --color-accent:             hsl(0 0% 94%);
+  --color-accent-foreground:  hsl(0 0% 10%);
+
+  --color-destructive:        hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+
+  --color-border:             hsl(0 0% 90%);
+  --color-input:              hsl(0 0% 90%);
+  --color-ring:               hsl(0 0% 10%);
 
   @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-
-    to {
-      height: var(--radix-accordion-content-height);
-    }
+    from { height: 0; }
+    to   { height: var(--radix-accordion-content-height); }
   }
-
   @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-
-    to {
-      height: 0;
-    }
+    from { height: var(--radix-accordion-content-height); }
+    to   { height: 0; }
   }
-
   @keyframes fade-up {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
-
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
-
   @keyframes slide-right {
-    from {
-      opacity: 0;
-      transform: translateX(-20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    from { opacity: 0; transform: translateX(-20px); }
+    to   { opacity: 1; transform: translateX(0); }
   }
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-fade-up: fade-up 0.6s ease-out forwards;
-  --animate-fade-in: fade-in 0.5s ease-out forwards;
-  --animate-slide-right: slide-right 0.5s ease-out forwards;
+  --animate-accordion-up:   accordion-up 0.2s ease-out;
+  --animate-fade-up:        fade-up 0.6s ease-out forwards;
+  --animate-fade-in:        fade-in 0.5s ease-out forwards;
+  --animate-slide-right:    slide-right 0.5s ease-out forwards;
 }
 
-:root {
-  --background: 0 0% 100%;
-  --foreground: 0 0% 8%;
-
-  --card: 0 0% 100%;
-  --card-foreground: 0 0% 8%;
-
-  --popover: 0 0% 100%;
-  --popover-foreground: 0 0% 8%;
-
-  /* Near-black primary for pill buttons like the Figma */
-  --primary: 0 0% 10%;
-  --primary-foreground: 0 0% 100%;
-
-  --secondary: 0 0% 96%;
-  --secondary-foreground: 0 0% 10%;
-
-  --muted: 0 0% 96%;
-  --muted-foreground: 0 0% 45%;
-
-  --accent: 0 0% 94%;
-  --accent-foreground: 0 0% 10%;
-
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 100%;
-
-  --border: 0 0% 90%;
-  --input: 0 0% 90%;
-  --ring: 0 0% 10%;
-
-  --radius: 0.75rem;
-}
-
+/* ─────────────────────────────────────────────
+   Dark mode: override the @theme color tokens
+   using the same CSS custom property names.
+   Tailwind v4 re-reads these at runtime.
+───────────────────────────────────────────── */
 .dark {
-  --background: 0 0% 6%;
-  --foreground: 0 0% 98%;
+  --color-background:         hsl(0 0% 6%);
+  --color-foreground:         hsl(0 0% 98%);
 
-  --card: 0 0% 10%;
-  --card-foreground: 0 0% 98%;
+  --color-card:               hsl(0 0% 10%);
+  --color-card-foreground:    hsl(0 0% 98%);
 
-  --popover: 0 0% 10%;
-  --popover-foreground: 0 0% 98%;
+  --color-popover:            hsl(0 0% 10%);
+  --color-popover-foreground: hsl(0 0% 98%);
 
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 6%;
+  --color-primary:            hsl(0 0% 98%);
+  --color-primary-foreground: hsl(0 0% 6%);
 
-  --secondary: 0 0% 16%;
-  --secondary-foreground: 0 0% 98%;
+  --color-secondary:          hsl(0 0% 16%);
+  --color-secondary-foreground: hsl(0 0% 98%);
 
-  --muted: 0 0% 16%;
-  --muted-foreground: 0 0% 60%;
+  --color-muted:              hsl(0 0% 16%);
+  --color-muted-foreground:   hsl(0 0% 60%);
 
-  --accent: 0 0% 16%;
-  --accent-foreground: 0 0% 98%;
+  --color-accent:             hsl(0 0% 16%);
+  --color-accent-foreground:  hsl(0 0% 98%);
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
+  --color-destructive:        hsl(0 62.8% 50%);
+  --color-destructive-foreground: hsl(0 0% 98%);
 
-  --border: 0 0% 18%;
-  --input: 0 0% 18%;
-  --ring: 0 0% 80%;
+  --color-border:             hsl(0 0% 18%);
+  --color-input:              hsl(0 0% 18%);
+  --color-ring:               hsl(0 0% 80%);
 }
 
 @layer base {
@@ -171,42 +125,24 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
   }
 
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  ::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+  ::-webkit-scrollbar       { width: 6px; }
+  ::-webkit-scrollbar-track { background: #1a1a1a; }
+  ::-webkit-scrollbar-thumb { background: #555; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: #888; }
 }
 
-/* Utility classes for Figma-matching styles */
 @layer utilities {
   .btn-black {
     @apply bg-black text-white rounded-full px-6 py-3 font-semibold text-sm hover:bg-gray-800 transition-all duration-200;
   }
 
   .section-heading {
-    @apply text-3xl md:text-4xl font-bold tracking-tight text-gray-900;
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
   }
 
   .hero-text {
@@ -221,33 +157,23 @@
     @apply hover:shadow-2xl hover:-translate-y-2 transition-all duration-300;
   }
 
-  .star-rating {
-    @apply flex gap-1;
-  }
+  .star-rating        { @apply flex gap-1; }
+  .star-rating .star  { @apply text-amber-400 text-lg; }
 
-  .star-rating .star {
-    @apply text-amber-400 text-lg;
-  }
-
-  .animate-fade-up {
-    animation: fade-up 0.6s ease-out forwards;
-  }
+  .animate-fade-up { animation: fade-up 0.6s ease-out forwards; }
 
   .animate-fade-up-delay-1 {
     animation: fade-up 0.6s ease-out 0.1s forwards;
     opacity: 0;
   }
-
   .animate-fade-up-delay-2 {
     animation: fade-up 0.6s ease-out 0.2s forwards;
     opacity: 0;
   }
-
   .animate-fade-up-delay-3 {
     animation: fade-up 0.6s ease-out 0.3s forwards;
     opacity: 0;
   }
-
   .animate-fade-up-delay-4 {
     animation: fade-up 0.6s ease-out 0.4s forwards;
     opacity: 0;

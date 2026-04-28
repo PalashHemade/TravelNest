@@ -76,7 +76,7 @@ export function PackageCard({
           <StarRating rating={rating} />
           <Link
             href={`/packages/${slug}`}
-            className="px-5 py-2 bg-black text-white text-sm font-semibold rounded-full hover:bg-gray-800 transition-all duration-200"
+            className="px-5 py-2 bg-foreground text-background text-sm font-semibold rounded-full hover:bg-foreground/85 transition-all duration-200"
           >
             Booking now
           </Link>

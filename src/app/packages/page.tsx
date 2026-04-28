@@ -88,7 +88,7 @@ export default async function PackagesPage({ searchParams }: PageProps) {
               <p className="text-5xl mb-4">🌍</p>
               <h2 className="text-2xl font-bold text-white mb-2">No packages found</h2>
               <p className="text-gray-400">Check back later or contact us to plan a custom trip.</p>
-              <Link href="/contact" className="mt-6 inline-block px-6 py-3 bg-white text-black rounded-full font-semibold hover:bg-gray-100 transition-all">
+              <Link href="/contact" className="mt-6 inline-block px-6 py-3 bg-foreground text-background rounded-full font-semibold hover:bg-foreground/85 transition-all">
                 Contact Us
               </Link>
             </div>

@@ -31,7 +31,6 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Show role mismatch error if redirected back from NextAuth
   useEffect(() => {
     if (searchParams.get("error") === "RoleMismatch") {
       toast.error("Wrong role selected. Please pick the role that matches your account.");
@@ -112,12 +111,12 @@ function LoginForm() {
       </div>
 
       {/* Right panel — form */}
-      <div className="flex items-center justify-center px-6 py-12 bg-white">
+      <div className="flex items-center justify-center px-6 py-12 bg-background">
         <div className="w-full max-w-[420px] space-y-6">
           {/* Header */}
           <div className="text-center">
-            <h1 className="text-3xl font-black text-gray-900">Welcome back</h1>
-            <p className="text-gray-500 text-sm mt-1">Select your role, then sign in</p>
+            <h1 className="text-3xl font-black text-foreground">Welcome back</h1>
+            <p className="text-muted-foreground text-sm mt-1">Select your role, then sign in</p>
           </div>
 
           <Form {...form}>
@@ -128,7 +127,7 @@ function LoginForm() {
                 name="role"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-semibold text-gray-700">I am signing in as a…</FormLabel>
+                    <FormLabel className="text-sm font-semibold text-foreground">I am signing in as a…</FormLabel>
                     <FormControl>
                       <div className="grid grid-cols-2 gap-3 mt-1">
                         <button
@@ -136,17 +135,17 @@ function LoginForm() {
                           onClick={() => field.onChange("user")}
                           className={`relative flex flex-col items-center gap-2 rounded-2xl border-2 px-4 py-5 text-center transition-all cursor-pointer select-none focus:outline-none ${
                             field.value === "user"
-                              ? "border-gray-900 bg-gray-50 shadow-md"
-                              : "border-gray-200 hover:border-gray-400 hover:bg-gray-50"
+                              ? "border-foreground bg-accent shadow-md"
+                              : "border-border hover:border-foreground/40 hover:bg-accent/50"
                           }`}
                         >
                           {field.value === "user" && (
-                            <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-xs text-white font-bold">✓</span>
+                            <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-foreground text-xs text-background font-bold">✓</span>
                           )}
                           <span className="text-3xl">🧳</span>
                           <div>
-                            <p className="font-bold text-sm text-gray-900">Traveler</p>
-                            <p className="text-xs text-gray-400 mt-0.5">Browse &amp; book trips</p>
+                            <p className="font-bold text-sm text-foreground">Traveler</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">Browse &amp; book trips</p>
                           </div>
                         </button>
 
@@ -155,8 +154,8 @@ function LoginForm() {
                           onClick={() => field.onChange("admin")}
                           className={`relative flex flex-col items-center gap-2 rounded-2xl border-2 px-4 py-5 text-center transition-all cursor-pointer select-none focus:outline-none ${
                             field.value === "admin"
-                              ? "border-orange-500 bg-orange-50 shadow-md"
-                              : "border-gray-200 hover:border-orange-400 hover:bg-orange-50/50"
+                              ? "border-orange-500 bg-orange-500/10 shadow-md"
+                              : "border-border hover:border-orange-400/40 hover:bg-orange-500/5"
                           }`}
                         >
                           {field.value === "admin" && (
@@ -164,8 +163,8 @@ function LoginForm() {
                           )}
                           <span className="text-3xl">🛠️</span>
                           <div>
-                            <p className="font-bold text-sm text-gray-900">Admin</p>
-                            <p className="text-xs text-gray-400 mt-0.5">Manage the platform</p>
+                            <p className="font-bold text-sm text-foreground">Admin</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">Manage the platform</p>
                           </div>
                         </button>
                       </div>
@@ -178,8 +177,8 @@ function LoginForm() {
               {/* Confirmation banner */}
               <div className={`rounded-xl px-4 py-2.5 text-sm flex items-center gap-2 transition-colors ${
                 selectedRole === "admin"
-                  ? "bg-orange-50 text-orange-800 border border-orange-200"
-                  : "bg-gray-50 text-gray-700 border border-gray-200"
+                  ? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+                  : "bg-accent text-foreground border border-border"
               }`}>
                 <span>{selectedRole === "admin" ? "🛠️" : "🧳"}</span>
                 <span>
@@ -196,11 +195,11 @@ function LoginForm() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 font-semibold text-sm">Email</FormLabel>
+                    <FormLabel className="text-foreground font-semibold text-sm">Email</FormLabel>
                     <FormControl>
                       <Input
                         placeholder="name@example.com"
-                        className="rounded-xl border-gray-200 h-11 focus-visible:ring-gray-900"
+                        className="rounded-xl border-border h-11 focus-visible:ring-ring"
                         {...field}
                       />
                     </FormControl>
@@ -215,12 +214,12 @@ function LoginForm() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700 font-semibold text-sm">Password</FormLabel>
+                    <FormLabel className="text-foreground font-semibold text-sm">Password</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
                         placeholder="••••••••"
-                        className="rounded-xl border-gray-200 h-11 focus-visible:ring-gray-900"
+                        className="rounded-xl border-border h-11 focus-visible:ring-ring"
                         {...field}
                       />
                     </FormControl>
@@ -231,10 +230,10 @@ function LoginForm() {
 
               {/* Submit */}
               <Button
-                className={`w-full h-12 rounded-full font-bold text-base ${
+                className={`w-full h-12 font-bold text-base ${
                   selectedRole === "admin"
                     ? "bg-orange-500 hover:bg-orange-600 text-white"
-                    : "bg-black hover:bg-gray-800 text-white"
+                    : "bg-foreground text-background hover:bg-foreground/85"
                 }`}
                 type="submit"
                 disabled={isLoading}
@@ -248,10 +247,10 @@ function LoginForm() {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t border-gray-200" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-3 text-gray-400 font-medium">Or continue with</span>
+              <span className="bg-background px-3 text-muted-foreground font-medium">Or continue with</span>
             </div>
           </div>
 
@@ -261,7 +260,7 @@ function LoginForm() {
             type="button"
             disabled={isLoading}
             onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
-            className="w-full h-12 rounded-full border-gray-200 hover:bg-gray-50 font-medium"
+            className="w-full h-12 font-medium"
           >
             {isLoading ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -277,9 +276,9 @@ function LoginForm() {
           </Button>
 
           {/* Footer link */}
-          <p className="text-center text-sm text-gray-500">
+          <p className="text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/register" className="font-semibold text-gray-900 hover:underline underline-offset-4">
+            <Link href="/register" className="font-semibold text-foreground hover:underline underline-offset-4">
               Sign up
             </Link>
           </p>
@@ -291,7 +290,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-gray-300 border-t-black rounded-full" /></div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="animate-spin h-8 w-8 border-4 border-border border-t-foreground rounded-full" /></div>}>
       <LoginForm />
     </Suspense>
   );

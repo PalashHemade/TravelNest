@@ -87,9 +87,9 @@ export default async function DashboardPage() {
                           <div className="text-right">
                             <p className="font-bold">${booking.totalPrice.toLocaleString()}</p>
                             <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold 
-                              ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
-                                booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                                'bg-red-100 text-red-800'}`}>
+                              ${booking.status === 'confirmed' ? 'bg-green-500/15 text-green-500' : 
+                                booking.status === 'pending' ? 'bg-yellow-500/15 text-yellow-500' : 
+                                'bg-red-500/15 text-red-500'}`}>
                               {booking.status.toUpperCase()}
                             </span>
                           </div>

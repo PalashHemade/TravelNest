@@ -1,3 +1,7 @@
+import { configDotenv } from "dotenv";
+import { resolve } from "path";
+configDotenv({ path: resolve(process.cwd(), ".env.local") });
+
 import { DynamoDBClient, CreateTableCommand, ListTablesCommand } from "@aws-sdk/client-dynamodb";
 
 const config = {

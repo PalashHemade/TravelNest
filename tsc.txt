@@ -1,5 +1,0 @@
-src/app/sitemap.ts(2,23): error TS2307: Cannot find module '@/lib/db' or its corresponding type declarations.
-src/app/sitemap.ts(3,21): error TS2307: Cannot find module '@/models/Package' or its corresponding type declarations.
-src/app/sitemap.ts(4,18): error TS2307: Cannot find module '@/models/Blog' or its corresponding type declarations.
-src/lib/rate-limit.ts(1,23): error TS2307: Cannot find module '@/lib/db' or its corresponding type declarations.
-src/lib/rate-limit.ts(2,22): error TS2307: Cannot find module 'mongoose' or its corresponding type declarations.
